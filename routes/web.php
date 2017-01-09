@@ -11,12 +11,12 @@
 |
 */
 
-Route::group(['middleware'=>"web"], function ()
-{
+//Route::group(['middleware'=>"web"], function ()
+//{
 //    Route::get('/','LoginController@index');
 //    Route::post('/login','LoginController@login');
 //    Route::get('/logout','LoginController@logout');
-});
+//});
 
 Route::get('index', function () {
     return view('login');
