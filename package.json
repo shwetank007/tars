@@ -1,0 +1,32 @@
+{
+  "name": "snaphrm",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Froiden <contactus@froiden.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "elixir-vuemaker": "^0.1.0",
+    "fullcalendar": "~2.6.0",
+    "gulp": "^3.9.1",
+    "gulp-debug": "^2.1.2",
+    "laravel-elixir": "^6.0.0-9",
+    "laravel-elixir-browsersync-official": "^1.0.0",
+    "laravel-elixir-vue-2": "^0.2.0",
+    "laravel-elixir-webpack-official": "^1.0.2",
+    "vue": "2.0.0",
+    "vue-resource": "^0.9.3",
+    "vue-router": "^2.0.0",
+    "yargs": "^6.3.0"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bootstrap-sass": "^3.3.7",
+    "imports-loader": "^0.7.0",
+    "jquery": "^3.1.1",
+    "moment": "^2.10.6",
+    "vee-validate": "2.0.0-beta.13",
+    "vue-msgbox": "^2.0.1",
+    "vue-resource": "^0.9.3",
+    "vuex": "^2.0.0"
+  }
+}
