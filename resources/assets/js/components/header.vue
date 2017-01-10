@@ -19,15 +19,26 @@
 	        <li><router-link to="/villain">Villain</router-link></li>
 	        <li><router-link to="/match">Match</router-link></li>
 	      </ul>
+		  <ul class="nav navbar-nav navbar-right">
+			  <li><a @click="logout">Logout</a></li>
+		  </ul>
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>
 </template>
 <script>
 global.jQuery = require('jquery');
-require('bootstrap-sass')
+require('bootstrap-sass');
 
 export default {
+methods: {
+	logout:function () {
+		this.$http.get('logout')
+				.then((response)=>{
+					window.location.href = "/tars/public/index";
+		});
+	}
+}
 
 }
 </script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Control;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class LoginController extends Controller
 {
@@ -19,13 +20,17 @@ class LoginController extends Controller
    		$credentials = ['email' => $email,'password' => $password];
 
    		if(Auth::guard('user')->attempt($credentials)) {
-   			return response()->json(['status'=>'success'],200);
+   			return response(['status'=>'success']);
    		}
-   		return response()->json(['status'=>'fail'],400);
+
+   		return response(['status' => 'fail']);
    }
 
    public function logout() {
-       Auth::guard('user')->logout();
-//       return Redirect::route(l;
+       if (Auth::guard('user')->check()) {
+           Auth::guard('user')->logout();
+           return response(['status'=>'success']);
+       }
+       return response(['status' => 'fail']);
    }
 }
