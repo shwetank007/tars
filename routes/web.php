@@ -1,9 +1,10 @@
 <?php
 
+Route::get('/', 'Control\LoginController@index');
 
 Route::group(['namespace'=>'Control','middleware'=>"web"], function ()
 {
-    Route::get('index', 'LoginController@index');
+    Route::get('/login', 'LoginController@index');
     Route::post('/login',['as' => 'login', 'uses' => 'LoginController@login']);
 });
 

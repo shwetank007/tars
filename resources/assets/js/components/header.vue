@@ -35,7 +35,7 @@ methods: {
 	logout:function () {
 		this.$http.get('logout')
 				.then((response)=>{
-					window.location.href = "/tars/public/index";
+					window.location.href = "/tars/public/";
 		});
 	}
 }

@@ -19,6 +19,7 @@ class Matches extends Migration
             $table->string('cause');
             $table->string('place');
             $table->string('detail');
+            $table->string('date');
             $table->timestamps();
         });
     }

@@ -27,6 +27,7 @@
     "vee-validate": "2.0.0-beta.13",
     "vue-msgbox": "^2.0.1",
     "vue-resource": "^0.9.3",
+    "vuejs-datepicker": "^0.5.2",
     "vuex": "^2.0.0"
   }
 }

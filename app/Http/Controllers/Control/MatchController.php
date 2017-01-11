@@ -11,9 +11,13 @@ class MatchController extends Controller
 {
     public function index()
     {
+        $villain = DB::table('villains')
+            ->get();
+        $hero = DB::table('heroes')
+            ->get();
         $match = DB::table('matches')
             ->get();
-        return response()->json($match);
+        return response()->json(['fixture'=>$match,'heros'=>$hero,'aVillain'=>$villain]);
     }
 
    public function store(Request $request)
@@ -21,13 +25,16 @@ class MatchController extends Controller
         DB::beginTransaction();
 
             $match = new Match();
-            $match->actor = $request->get('actor');
-            $match->cause = $request->get('cause');
-            $match->place = $request->get('place');
-            $match->detail = $request->get('detail');
+            $match->actor   = $request->get('actor');
+            $match->cause   = $request->get('cause');
+            $match->place   = $request->get('place');
+            $match->detail  = $request->get('detail');
+            $match->date    = $request->get('date');
             $match->save();
 
         DB::commit();
+
+        return response()->json(['status'=>'success'],200);
     }
 
    public function destroy($id)
