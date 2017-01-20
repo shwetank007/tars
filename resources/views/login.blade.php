@@ -45,6 +45,10 @@
 		text-align: center;
 	}
 
+	.message {
+		font-size: large;
+		text-align: center;
+	}
 </style>
 </head>
 <body>
@@ -53,6 +57,7 @@
 		<div class="col-md-offset-5 col-md-3">
 			<div class="form-login">
 				<h4>T.A.R.S.</h4>
+				<div id="message" class="message"></div>
 				<form method="post" class="login-form" action="">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<input name="email" type="email" id="userName" class="form-control input-sm chat-input" placeholder="E-mail Address" />
@@ -80,8 +85,17 @@
 			type:'POST',
 			url:'{!! route('login') !!}',
 			data: $(".login-form").serialize(),
+			beforeSend: function () {
+				$('#message').removeClass("bg-danger text-danger text-success bg-success").text('').fadeIn();
+			},
 			success: function (response) {
-				window.location.href = "{{route('dashboard')}}"
+				if(response.status == 'fail') {
+					$('#message').addClass('bg-danger').addClass('text-danger').text('Invalid Credentials').fadeOut(5000);
+				}
+				if(response.status == 'success') {
+					$('#message').addClass('bg-success').addClass('text-success').text('Redirecting to Dashboard...').fadeOut(5000);
+					window.location.href = "{{route('dashboard')}}"
+				}
 			}
 		})
 	}

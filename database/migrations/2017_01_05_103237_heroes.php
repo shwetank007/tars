@@ -17,6 +17,7 @@ class Heroes extends Migration
             $table->increments('id');
             $table->string('actor');
             $table->string('name');
+            $table->unique(['actor','name']);
             $table->string('weakness');
             $table->string('partner');
             $table->string('rival');

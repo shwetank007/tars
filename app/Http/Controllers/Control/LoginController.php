@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Redirect;
 class LoginController extends Controller
 {
     public function index() {
+        if(Auth::guard('user')->check()) {
+            return Redirect::route("dashboard");
+        }
         return view('login');
     }
 

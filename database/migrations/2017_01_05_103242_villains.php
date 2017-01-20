@@ -17,6 +17,7 @@ class Villains extends Migration
             $table->increments('id');
             $table->string('actor');
             $table->string('name');
+            $table->unique(['actor','name']);
             $table->string('partner');
             $table->string('rival');
             $table->string('detail');

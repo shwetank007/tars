@@ -1,6 +1,7 @@
 <style>
-	body{
+	html,body{
 		background-color: #d3d3d3;
+		height:100%;
 	}
 	.centered-form{
 		margin-top: 60px;
@@ -18,9 +19,9 @@
 	}
 </style>
 <template>
-	<div>
+	<div class="page-wrap">
 		<div class="center">
-			<button @click="seen = !seen">Add Match</button>
+			<button @click="seen = !seen">{{(seen)?'Cancel':'Add Match' }}</button>
 			<div v-if="seen">
 				<div class="container">
 					<div class="row centered-form">
@@ -30,34 +31,43 @@
 									<h3 class="panel-title">Add New Match</h3>
 								</div>
 								<div class="panel-body">
-                                    <div class="form-group">
-                                        <select class="select-picker" v-model="hero">
-                                            <option disabled value="">Select Superhero</option>
-                                            <option v-for="(superhero,index) in superheroes">{{superhero.actor}}</option>
-                                        </select>
-                                             V/S
-                                        <select class="select-picker" v-model="antiHero">
-                                            <option disabled value="">Select Villain</option>
-                                            <option v-for="(villain,index) in villains">{{villain.actor}}</option>
-                                        </select>
-                                    </div>
+									<div class="row">
+										<div class="col-md-5">
+											<div class="form-group" :class="{'has-error': errors.has('hero')}">
+												<select class="select-picker form-control" v-model="hero" v-validate data-vv-rules="required" data-vv-name="hero">
+													<option value="">Select Hero</option>
+													<option v-for="(superhero,index) in superheroes">{{superhero.actor}}</option>
+												</select>
+												<span v-show="errors.has('hero')" class="help-block">{{ errors.first('hero') }}</span>
+											</div>
+										</div>
+										<div class="col-md-1">V/S</div>
+										<div class="col-md-5">
+											<div class="form-group" :class="{'has-error': errors.has('antiHero')}">
+												<select class="select-picker form-control" v-model="antiHero" v-validate data-vv-rules="required" data-vv-name="antiHero">
+													<option value="">Select Villain</option>
+													<option v-for="(villain,index) in villains">{{villain.actor}}</option>
+												</select>
+												<span v-show="errors.has('antiHero')" class="help-block">{{ errors.first('antiHero') }}</span>
+											</div>
+										</div>
+									</div>
 
-                                    <div class="form-group">
-                                        <textarea v-model="cause" name="cause" class="form-control input-sm" placeholder="Cause of Match"></textarea>
-                                    </div>
+                                    <div class="form-group" :class="{'has-error': errors.has('cause')}">
+                                        <textarea v-model="cause" v-validate data-vv-rules="required" data-vv-name="cause" class="form-control input-sm" placeholder="Cause of Match"></textarea>
+										<span v-show="errors.has('cause')" class="help-block">{{ errors.first('cause') }}</span>
+									</div>
 
-                                    <div class="form-group">
-                                        <input v-model="place" type="text" name="place" class="form-control input-sm" placeholder="Place of Match">
-                                    </div>
+                                    <div class="form-group" :class="{'has-error': errors.has('place')}">
+                                        <input v-model="place" type="text" v-validate data-vv-rules="required" data-vv-name="place" class="form-control input-sm" placeholder="Place of Match">
+										<span v-show="errors.has('place')" class="help-block">{{ errors.first('place') }}</span>
+									</div>
 
-                                    <div class="form-group">
-
-                                    </div>
-
-                                    <div class="form-group">
-                                        <datepicker placeholder="Match Date" v-model="date"></datepicker>
-                                    </div>
-                                    <button @click="add" class="btn btn-info btn-block">Submit</button>
+                                    <div class="form-group" :class="{'has-error': errors.has('date')}">
+                                        <datepicker :disabled="state.disabled" placeholder="Match Date" v-model="date" v-validate data-vv-rules="required" data-vv-name="date"></datepicker>
+										<span v-show="errors.has('date')" class="help-block">{{ errors.first('date') }}</span>
+									</div>
+                                    <button @click.prevent="add" v-bind:disabled="!isValid" class="btn btn-info btn-block">Submit</button>
 								</div>
 							</div>
 						</div>
@@ -85,6 +95,7 @@
 <script>
 import Datepicker from 'vuejs-datepicker';
 var moment = require('moment');
+
 export default {
     components: { Datepicker },
     data: function () {
@@ -98,7 +109,12 @@ export default {
             matches: [],
             hero: '',
             antiHero: '',
-            date: ''
+            date: '',
+			state: {
+				disabled: {
+					to: new Date()
+				}
+			}
         }
     },
   	created() {
@@ -146,7 +162,12 @@ export default {
 				console.log('Not Deleted');
 			});
 		}
-    }
+    },
+	computed: {
+		isValid: function () {
+			return this.superhero != '' && this.villain != '' && this.cause != '' && this.place != '' && this.date != ''
+		}
+	}
 }
 
 </script>

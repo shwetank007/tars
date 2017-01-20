@@ -1,6 +1,7 @@
 <style>
-	body{
+	html,body{
 		background-color: #d3d3d3;
+		height:100%;
 	}
 	.centered-form{
 		margin-top: 60px;
@@ -14,9 +15,9 @@
 	}
 </style>
 <template>
-	<div>
+	<div class="page-wrap">
 		<div class="center">
-			<button @click="seen = !seen">Add Villain</button>
+			<button @click="seen = !seen">{{(seen)?'Cancel':'Add Villain' }}</button>
 			<div v-if="seen">
 				<div class="container">
 					<div class="row centered-form">
@@ -26,23 +27,31 @@
 									<h3 class="panel-title">Add a New Villain</h3>
 								</div>
 								<div class="panel-body">
-									<div class="form-group">
-										<input v-model="actor" type="text" name="actor" class="form-control input-sm" placeholder="Villain Name">
+									<div class="form-group" :class="{'has-error': errors.has('actor')}">
+										<input v-model="actor" v-validate data-vv-rules="required" data-vv-name="actor" type="text"
+											   class="form-control input-sm" placeholder="Villain Name">
+										<span v-show="errors.has('actor')" class="help-block">{{ errors.first('actor') }}</span>
 									</div>
 
-									<div class="form-group">
-										<input v-model="name" type="text" name="name" class="form-control input-sm" placeholder="Villain Alias">
+									<div class="form-group" :class="{'has-error': errors.has('name')}">
+										<input v-model="name" v-validate data-vv-rules="required" data-vv-name="name" type="text"
+											   class="form-control input-sm" placeholder="Villain Alias">
+										<span v-show="errors.has('name')" class="help-block">{{ errors.first('name') }}</span>
 									</div>
 
-									<div class="form-group">
-										<input v-model="partner" type="text" name="partner" class="form-control input-sm" placeholder="Partner Name">
+									<div class="form-group" :class="{'has-error': errors.has('partner')}">
+										<input v-model="partner" v-validate data-vv-rules="required" data-vv-name="partner" type="text"
+											   class="form-control input-sm" placeholder="Partner Name">
+										<span v-show="errors.has('partner')" class="help-block">{{ errors.first('partner') }}</span>
 									</div>
 
-									<div class="form-group">
-										<input v-model="rival" type="text" name="rival" class="form-control input-sm" placeholder="Arch Rival Name">
+									<div class="form-group" :class="{'has-error': errors.has('rival')}">
+										<input v-model="rival" v-validate data-vv-rules="required" data-vv-name="rival" type="text"
+											   class="form-control input-sm" placeholder="Arch Rival Name">
+										<span v-show="errors.has('rival')" class="help-block">{{ errors.first('rival') }}</span>
 									</div>
 
-									<button @click.prevent="add" class="btn btn-info btn-block">Submit</button>
+									<button @click.prevent="add" v-bind:disabled="!isValid" class="btn btn-info btn-block">Submit</button>
 								</div>
 							</div>
 						</div>
@@ -67,17 +76,16 @@
 	</div>
 </template>
 <script>
-var data = {
-	seen: false,
-	actor: '',
-	name: '',
-	partner: '',
-	rival: '',
-	antiHero: []
-};
 export default {
 	data: function () {
-		return data
+		return {
+			seen: false,
+			actor: '',
+			name: '',
+			partner: '',
+			rival: '',
+			antiHero: []
+		}
 	},
 	created() {
 		this.fetch();
@@ -119,6 +127,11 @@ export default {
 			.catch((response) => {
 				console.log('Not Deleted');
 			});
+		}
+	},
+	computed: {
+		isValid: function () {
+			return this.actor != '' && this.name != '' && this.partner != '' && this.rival != ''
 		}
 	}
 }
