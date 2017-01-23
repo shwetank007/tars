@@ -17,7 +17,9 @@ class MatchController extends Controller
             ->get();
         $match = DB::table('matches')
             ->get();
-        return response()->json(['fixture'=>$match,'heros'=>$hero,'aVillain'=>$villain]);
+        $power = DB::table('powers')
+            ->get();
+        return response()->json(['fixture'=>$match,'heros'=>$hero,'aVillain'=>$villain,'power'=>$power]);
     }
 
    public function store(Request $request)

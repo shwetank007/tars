@@ -27,6 +27,9 @@
 									<h3 class="panel-title">Add a New Villain</h3>
 								</div>
 								<div class="panel-body">
+									<div v-if="errorMessage" class="bg-danger text-danger">
+										Villain Exists.
+									</div>
 									<div class="form-group" :class="{'has-error': errors.has('actor')}">
 										<input v-model="actor" v-validate data-vv-rules="required" data-vv-name="actor" type="text"
 											   class="form-control input-sm" placeholder="Villain Name">
@@ -84,7 +87,8 @@ export default {
 			name: '',
 			partner: '',
 			rival: '',
-			antiHero: []
+			antiHero: [],
+			errorMessage: false
 		}
 	},
 	created() {
@@ -112,12 +116,13 @@ export default {
 			this.$http.post('api/villain', villain)
 			.then((response) => {
 				this.antiHero.push(villain);
+				this.actor = this.actor = this.name = this.partner = this.rival = '';
+				this.seen = false;
 			})
 			.catch((response) => {
 				console.log('error');
+				this.errorMessage = true;
 			});
-			this.actor = this.actor = this.name = this.partner = this.rival = '';
-			this.seen = false;
 		},
 		remove: function (item,id) {
 			this.$http.delete('api/villain/'+id)

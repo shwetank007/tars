@@ -14,11 +14,6 @@
 	<div class="page-wrap">
 		<div class="center">
 			<button @click="seen = !seen">{{(seen)?'Cancel':'Add Hero' }}</button>
-			<div v-if="errorMessage">
-				<span class="text-danger bg-danger">
-					<h3>Superhero already exists.</h3>
-				</span>
-			</div>
 			<div v-if="seen">
 				<div class="container">
 					<div class="row centered-form">
@@ -28,6 +23,9 @@
 									<h3 class="panel-title">Add a New Hero</h3>
 								</div>
 								<div class="panel-body">
+									<div v-if="errorMessage" class="bg-danger text-danger">
+										Superhero Exists.
+									</div>
 									<div class="form-group" :class="{'has-error': errors.has('actor')}">
 										<input v-model="actor" v-validate data-vv-rules="required" data-vv-name="actor" type="text"
 											   class="form-control input-sm" placeholder="Superhero Name">
@@ -123,12 +121,13 @@ export default {
 			this.$http.post('api/hero', hero)
 			.then((response) => {
 				this.heroes.push(hero);
+				this.actor = this.name = this.weakness = this.partner = this.rival = '';
+				this.seen = false;
 			})
 			.catch((error) => {
 				console.log(error);
+				this.errorMessage = true;
             });
-			this.actor = this.name = this.weakness = this.partner = this.rival = '';
-			this.seen = false;
 		},
 		remove: function (item,id) {
 			this.$http.delete('api/hero/'+id)

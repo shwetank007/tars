@@ -86,6 +86,7 @@
 					</div>
 					<button @click="match.detail = !match.detail">{{(match.detail)?'Hide Detail':'Detail' }}</button>
 					<button @click="remove(index,match.id)">Delete</button>
+					<button @click="start">Start Match</button>
 				</li>
 			</ol>
 		</div>
@@ -110,6 +111,7 @@ export default {
             hero: '',
             antiHero: '',
             date: '',
+			powers: [],
 			state: {
 				disabled: {
 					to: new Date()
@@ -129,6 +131,7 @@ export default {
                 that.matches = all.fixture;
                 that.superheroes = all.heros;
                 that.villains = all.aVillain;
+				that.powers	= all.power;
 			})
 			.catch((response) => {
 				console.log('fail');
@@ -161,6 +164,61 @@ export default {
 			.catch((response) => {
 				console.log('Not Deleted');
 			});
+		},
+		start : function () {
+			var herohealth = 100;
+			var villainhealth = 100;
+			var n = 0;
+			var weaponchoice = Math.floor((Math.random() * 10) + 1);
+			var damage;
+			var herototalhealth;
+			var villaintotalhealth;
+			var toss = Math.floor((Math.random() * 10) + 1);
+			var tossresult = toss % 2;
+			if(tossresult == 0) {
+				while(1) {
+					if(n % 2 == 0){
+						damage = this.powers[weaponchoice].damage;
+						villainhealth = villainhealth - damage;
+						villaintotalhealth = villainhealth;
+						console.log('Villain Health'+ villaintotalhealth)	;
+						if(villaintotalhealth<=0){
+							break;
+						}
+					} else {
+						damage = this.powers[weaponchoice].damage;
+						herohealth = herohealth - damage;
+						herototalhealth = herohealth;
+						console.log('Hero Health'+ herototalhealth);
+						if(herototalhealth<=0){
+							break;
+						}
+					}
+					n++;
+				}
+			}
+			else {
+				while(1) {
+					if(n % 2 == 0){
+						damage = this.powers[weaponchoice].damage;
+						herohealth = herohealth - damage;
+						herototalhealth = herohealth;
+						console.log('Hero Health'+ herototalhealth);
+						if(herototalhealth<=0){
+							break;
+						}
+					} else {
+						damage = this.powers[weaponchoice].damage;
+						villainhealth = villainhealth - damage;
+						villaintotalhealth = villainhealth;
+						console.log('Villain Health'+ villaintotalhealth)	;
+						if(villaintotalhealth<=0){
+							break;
+						}
+					}
+					n++;
+				}
+			}
 		}
     },
 	computed: {
