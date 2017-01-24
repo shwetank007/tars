@@ -75,19 +75,28 @@
 				</div>
 			</div>
 		</div>
-		<div>
+		<div class="col-md-6">
 			<ol>
 				<li v-for="(match,index) in matches" v-cloak>
 					{{ match.actor }}
 					<div v-show="match.detail">
 						Cause       : {{ match.cause }}.<br>
 						Place       : {{ match.place }}.<br>
-                        Date        : {{match.date}}.
+						Date        : {{match.date}}.
 					</div>
 					<button @click="match.detail = !match.detail">{{(match.detail)?'Hide Detail':'Detail' }}</button>
 					<button @click="remove(index,match.id)">Delete</button>
 					<button @click="start">Start Match</button>
 				</li>
+			</ol>
+		</div>
+		<div class="col-md-6 center" v-if="">
+			<ol>
+				<li v-for="(comment,index) in commentary">
+					{{comment}}
+				</li>
+
+				<button @click="clear">Clear</button>
 			</ol>
 		</div>
 	</div>
@@ -116,7 +125,12 @@ export default {
 				disabled: {
 					to: new Date()
 				}
-			}
+			},
+			villainHealth: '',
+			heroHealth: '',
+			weaponDamage: '',
+			weaponName: '',
+			commentary: []
         }
     },
   	created() {
@@ -166,59 +180,80 @@ export default {
 			});
 		},
 		start : function () {
-			var herohealth = 100;
-			var villainhealth = 100;
-			var n = 0;
-			var weaponchoice = Math.floor((Math.random() * 10) + 1);
-			var damage;
-			var herototalhealth;
-			var villaintotalhealth;
-			var toss = Math.floor((Math.random() * 10) + 1);
-			var tossresult = toss % 2;
-			if(tossresult == 0) {
-				while(1) {
-					if(n % 2 == 0){
-						damage = this.powers[weaponchoice].damage;
-						villainhealth = villainhealth - damage;
-						villaintotalhealth = villainhealth;
-						console.log('Villain Health'+ villaintotalhealth)	;
-						if(villaintotalhealth<=0){
-							break;
-						}
-					} else {
-						damage = this.powers[weaponchoice].damage;
-						herohealth = herohealth - damage;
-						herototalhealth = herohealth;
-						console.log('Hero Health'+ herototalhealth);
-						if(herototalhealth<=0){
-							break;
-						}
-					}
-					n++;
-				}
+			this.commentary.push('Match Start');
+			this.show = true;
+			this.toss();
+		},
+		common : function () {
+			return Math.floor((Math.random() * 10));
+		},
+		toss : function () {
+			var winner = this.common() % 2;
+//			console.log(winner);
+			if(winner == 0) {
+				this.commentary.push('Hero Win the toss');
+				this.heroAttack(this.heroHealth=100, this.villainHealth=100);
+			} else {
+				this.commentary.push('Villain Win the toss');
+				this.villainAttack(this.heroHealth=100, this.villainHealth=100);
 			}
-			else {
-				while(1) {
-					if(n % 2 == 0){
-						damage = this.powers[weaponchoice].damage;
-						herohealth = herohealth - damage;
-						herototalhealth = herohealth;
-						console.log('Hero Health'+ herototalhealth);
-						if(herototalhealth<=0){
-							break;
-						}
-					} else {
-						damage = this.powers[weaponchoice].damage;
-						villainhealth = villainhealth - damage;
-						villaintotalhealth = villainhealth;
-						console.log('Villain Health'+ villaintotalhealth)	;
-						if(villaintotalhealth<=0){
-							break;
-						}
-					}
-					n++;
-				}
+		},
+		villainShield : function () {
+//			console.log('Shielded villain');
+			this.villainHealth = this.villainHealth - (this.weaponDamage * 0.2);
+			this.commentary.push('Villain Shield the attack of the Hero but got a knick'+ ' ' +this.villainHealth);
+		},
+		heroShield : function () {
+//			console.log('Shielded Hero');
+			this.heroHealth = this.heroHealth - (this.weaponDamage * 0.2);
+			this.commentary.push('Hero Shield the attack of the Villain but got a knick'+ ' ' +this.heroHealth);
+		},
+		heroAttack : function () {
+//			console.log('Hero Attack');
+			var weaponChoice = this.common();
+			this.weaponDamage = this.powers[weaponChoice].damage;
+			this.weaponName = this.powers[weaponChoice].powerName;
+			this.commentary.push('Hero attacked with'+ ' ' +this.weaponName);
+//			console.log("Villain Health <br>"+this.villainHealth);
+//			console.log("Hero Health <br>"+this.heroHealth);
+			if(this.common() % 2 == 0) {
+				this.villainShield(this.villainHealth, this.weaponDamage);
+			} else {
+				this.villainHealth = this.villainHealth - this.weaponDamage;
+				this.commentary.push('Hero hit the villain and strike his life down to'+ ' ' +this.villainHealth);
 			}
+//			console.log("Hero hit Villain Health"+ "<br>" + this.villainHealth);
+			if(this.villainHealth > 0) {
+				this.villainAttack(this.villainHealth, this.heroHealth);
+			} else {
+//				console.log('Villain lost');
+				this.commentary.push('Villain Lost');
+			}
+		},
+		villainAttack : function () {
+//			console.log('Villain Attack');
+			var weaponChoice = this.common();
+			this.weaponDamage = this.powers[weaponChoice].damage;
+			this.weaponName = this.powers[weaponChoice].powerName;
+			this.commentary.push('Villain attacked with'+ ' ' +this.weaponName);
+//			console.log("Hero Health <br>" + this.heroHealth);
+//			console.log("Villain Health <br>"+this.villainHealth);
+			if(this.common() % 2 == 0) {
+				this.heroShield(this.heroHealth, this.weaponDamage);
+			} else {
+				this.heroHealth = this.heroHealth - this.weaponDamage;
+				this.commentary.push('Villain hit the hero and strike his life down to'+ ' ' +this.heroHealth);
+			}
+//			console.log("Villain hit Hero Health"+ "<br>" + this.heroHealth);
+			if(this.heroHealth > 0) {
+				this.heroAttack(this.villainHealth, this.heroHealth);
+			} else {
+				console.log('Hero lost');
+				this.commentary.push('Hero Lost');
+			}
+		},
+		clear : function () {
+			this.commentary = [];
 		}
     },
 	computed: {
