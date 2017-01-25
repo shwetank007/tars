@@ -36,7 +36,7 @@
 											<div class="form-group" :class="{'has-error': errors.has('hero')}">
 												<select class="select-picker form-control" v-model="hero" v-validate data-vv-rules="required" data-vv-name="hero">
 													<option value="">Select Hero</option>
-													<option v-for="(superhero,index) in superheroes">{{superhero.actor}}</option>
+													<option v-for="(superhero,index) in superheroes" v-bind:value="{id: superhero.id, name: superhero.actor}">{{superhero.actor}}</option>
 												</select>
 												<span v-show="errors.has('hero')" class="help-block">{{ errors.first('hero') }}</span>
 											</div>
@@ -46,7 +46,7 @@
 											<div class="form-group" :class="{'has-error': errors.has('antiHero')}">
 												<select class="select-picker form-control" v-model="antiHero" v-validate data-vv-rules="required" data-vv-name="antiHero">
 													<option value="">Select Villain</option>
-													<option v-for="(villain,index) in villains">{{villain.actor}}</option>
+													<option v-for="(villain,index) in villains" v-bind:value="{id: villain.id, name: villain.actor}">{{villain.actor}}</option>
 												</select>
 												<span v-show="errors.has('antiHero')" class="help-block">{{ errors.first('antiHero') }}</span>
 											</div>
@@ -78,7 +78,7 @@
 		<div class="col-md-6">
 			<ol>
 				<li v-for="(match,index) in matches" v-cloak>
-					{{ match.actor }}
+					{{match.hero_id}} v/s {{match.villain_id}}
 					<div v-show="match.detail">
 						Cause       : {{ match.cause }}.<br>
 						Place       : {{ match.place }}.<br>
@@ -126,8 +126,8 @@ export default {
 					to: new Date()
 				}
 			},
-			villainHealth: '',
-			heroHealth: '',
+			villainHealth: 100,
+			heroHealth: 100,
 			weaponDamage: '',
 			weaponName: '',
 			commentary: []
@@ -138,34 +138,41 @@ export default {
 	},
     methods: {
         fetch: function () {
-			let that = this;
 			this.$http.get('api/match')
 			.then((response) => {
 			    var all = JSON.parse(response.body);
-                that.matches = all.fixture;
-                that.superheroes = all.heros;
-                that.villains = all.aVillain;
-				that.powers	= all.power;
+                this.matches = all.fixture;
+                this.superheroes = all.heros;
+                this.villains = all.aVillain;
+				this.powers	= all.power;
 			})
-			.catch((response) => {
-				console.log('fail');
+			.catch((error) => {
+				console.debug(error);
 			});
         },
         add : function () {
-            let that = this;
 			var match = {
-				actor: that.hero + ' ' + 'v/s' + ' ' + that.antiHero,
-				cause: that.cause,
-				place: that.place,
-                date: moment(that.date).format('DD/MM/YYYY'),
+				hero_id: this.hero.id,
+				villain_id: this.antiHero.id,
+				cause: this.cause,
+				place: this.place,
+                date: moment(this.date).format('DD/MM/YYYY'),
+				detail: false
+			};
+			console.log(this.hero.name + " v/s " + this.antiHero.name);
+			var fight = {
+				actor: this.hero.name + " v/s " + this.antiHero.name,
+				cause: this.cause,
+				place: this.place,
+				date: moment(this.date).format('DD/MM/YYYY'),
 				detail: false
 			};
 			this.$http.post('api/match', match)
 			.then((response) => {
-				this.matches.push(match);
+				this.matches.push(fight);
 			})
-			.catch((response) => {
-				console.log('error');
+			.catch((error) => {
+				console.log(error);
 			});
 			this.superhero = this.villain = this.cause = this.place = this.date = '';
 			this.seen = false;
@@ -175,8 +182,8 @@ export default {
 			.then((response) => {
 				this.matches.splice(item,1);
 			})
-			.catch((response) => {
-				console.log('Not Deleted');
+			.catch((error) => {
+				console.debug(error);
 			});
 		},
 		start : function () {
@@ -189,66 +196,65 @@ export default {
 		},
 		toss : function () {
 			var winner = this.common() % 2;
-//			console.log(winner);
 			if(winner == 0) {
 				this.commentary.push('Hero Win the toss');
+				this.commentary.push('Hero Health '+ 100 + ',' +' Villain Health '+ 100);
 				this.heroAttack(this.heroHealth=100, this.villainHealth=100);
 			} else {
 				this.commentary.push('Villain Win the toss');
+				this.commentary.push('Hero Health '+ 100 + ',' +' Villain Health '+ 100);
 				this.villainAttack(this.heroHealth=100, this.villainHealth=100);
 			}
 		},
 		villainShield : function () {
-//			console.log('Shielded villain');
 			this.villainHealth = this.villainHealth - (this.weaponDamage * 0.2);
 			this.commentary.push('Villain Shield the attack of the Hero but got a knick'+ ' ' +this.villainHealth);
 		},
 		heroShield : function () {
-//			console.log('Shielded Hero');
 			this.heroHealth = this.heroHealth - (this.weaponDamage * 0.2);
 			this.commentary.push('Hero Shield the attack of the Villain but got a knick'+ ' ' +this.heroHealth);
 		},
 		heroAttack : function () {
-//			console.log('Hero Attack');
 			var weaponChoice = this.common();
 			this.weaponDamage = this.powers[weaponChoice].damage;
 			this.weaponName = this.powers[weaponChoice].powerName;
 			this.commentary.push('Hero attacked with'+ ' ' +this.weaponName);
-//			console.log("Villain Health <br>"+this.villainHealth);
-//			console.log("Hero Health <br>"+this.heroHealth);
 			if(this.common() % 2 == 0) {
 				this.villainShield(this.villainHealth, this.weaponDamage);
 			} else {
 				this.villainHealth = this.villainHealth - this.weaponDamage;
-				this.commentary.push('Hero hit the villain and strike his life down to'+ ' ' +this.villainHealth);
+				if(this.villainHealth <= 0){
+					this.villainHealth=0;
+					this.commentary.push('Hero hit the villain and strike his life down to'+ ' ' +this.villainHealth);
+				} else {
+					this.commentary.push('Hero hit the villain and strike his life down to'+ ' ' +this.villainHealth);
+				}
 			}
-//			console.log("Hero hit Villain Health"+ "<br>" + this.villainHealth);
 			if(this.villainHealth > 0) {
 				this.villainAttack(this.villainHealth, this.heroHealth);
 			} else {
-//				console.log('Villain lost');
 				this.commentary.push('Villain Lost');
 			}
 		},
 		villainAttack : function () {
-//			console.log('Villain Attack');
 			var weaponChoice = this.common();
 			this.weaponDamage = this.powers[weaponChoice].damage;
 			this.weaponName = this.powers[weaponChoice].powerName;
 			this.commentary.push('Villain attacked with'+ ' ' +this.weaponName);
-//			console.log("Hero Health <br>" + this.heroHealth);
-//			console.log("Villain Health <br>"+this.villainHealth);
 			if(this.common() % 2 == 0) {
 				this.heroShield(this.heroHealth, this.weaponDamage);
 			} else {
 				this.heroHealth = this.heroHealth - this.weaponDamage;
-				this.commentary.push('Villain hit the hero and strike his life down to'+ ' ' +this.heroHealth);
+				if(this.heroHealth <= 0){
+					this.heroHealth=0;
+					this.commentary.push('Villain hit the hero and strike his life down to'+ ' ' +this.heroHealth);
+				} else {
+					this.commentary.push('Villain hit the hero and strike his life down to'+ ' ' +this.heroHealth);
+				}
 			}
-//			console.log("Villain hit Hero Health"+ "<br>" + this.heroHealth);
 			if(this.heroHealth > 0) {
 				this.heroAttack(this.villainHealth, this.heroHealth);
 			} else {
-				console.log('Hero lost');
 				this.commentary.push('Hero Lost');
 			}
 		},

@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Match extends Model
 {
     protected $fillable = [
-        'actor', 'cause', 'place', 'detail',
+        'hero_id', 'villain_id', 'cause', 'place', 'detail',
     ];
+
+    public function hero()
+    {
+        return $this->belongsTo(Hero::class);
+    }
+
 }

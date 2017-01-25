@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Control;
 
+use App\Hero;
+use App\Power;
+use App\Villain;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Match;
@@ -11,14 +14,16 @@ class MatchController extends Controller
 {
     public function index()
     {
-        $villain = DB::table('villains')
-            ->get();
-        $hero = DB::table('heroes')
-            ->get();
-        $match = DB::table('matches')
-            ->get();
-        $power = DB::table('powers')
-            ->get();
+//        $villain = Villain::all();
+//        $hero = Hero::all();
+//        $match = Match::all();
+//        $power = Power::all();
+//        $match = Match::where('hero_id', '=', '$hero->id');
+//        $match = DB::table('matches')
+//            ->leftjoin('heroes', 'matches.hero_id', '=','heroes.id')
+//            ->select('hero.name');
+//        $match = Match::find(1)->hero;
+        dd(Match::all());
         return response()->json(['fixture'=>$match,'heros'=>$hero,'aVillain'=>$villain,'power'=>$power]);
     }
 
@@ -27,11 +32,12 @@ class MatchController extends Controller
         DB::beginTransaction();
 
             $match = new Match();
-            $match->actor   = $request->get('actor');
-            $match->cause   = $request->get('cause');
-            $match->place   = $request->get('place');
-            $match->detail  = $request->get('detail');
-            $match->date    = $request->get('date');
+            $match->hero_id     = $request->get('hero_id');
+            $match->villain_id  = $request->get('villain_id');
+            $match->cause       = $request->get('cause');
+            $match->place       = $request->get('place');
+            $match->detail      = $request->get('detail');
+            $match->date        = $request->get('date');
             $match->save();
 
         DB::commit();

@@ -15,7 +15,7 @@ class Powers extends Migration
     {
         Schema::create('powers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('powerName');
+            $table->string('power_name');
             $table->string('damage');
             $table->string('range');
             $table->timestamps();
