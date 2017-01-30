@@ -14,16 +14,11 @@ class MatchController extends Controller
 {
     public function index()
     {
-//        $villain = Villain::all();
-//        $hero = Hero::all();
-//        $match = Match::all();
-//        $power = Power::all();
-//        $match = Match::where('hero_id', '=', '$hero->id');
-//        $match = DB::table('matches')
-//            ->leftjoin('heroes', 'matches.hero_id', '=','heroes.id')
-//            ->select('hero.name');
-//        $match = Match::find(1)->hero;
-        dd(Match::all());
+        $villain = Villain::all();
+        $hero= Hero::all();
+        $match = Match::with('hero','villain')->get();
+        $power = Power::all();
+
         return response()->json(['fixture'=>$match,'heros'=>$hero,'aVillain'=>$villain,'power'=>$power]);
     }
 

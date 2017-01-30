@@ -78,7 +78,7 @@
 		<div class="col-md-6">
 			<ol>
 				<li v-for="(match,index) in matches" v-cloak>
-					{{match.hero_id}} v/s {{match.villain_id}}
+					{{match.hero.actor}} v/s {{match.villain.actor}}
 					<div v-show="match.detail">
 						Cause       : {{ match.cause }}.<br>
 						Place       : {{ match.place }}.<br>
@@ -86,17 +86,15 @@
 					</div>
 					<button @click="match.detail = !match.detail">{{(match.detail)?'Hide Detail':'Detail' }}</button>
 					<button @click="remove(index,match.id)">Delete</button>
-					<button @click="start">Start Match</button>
+					<button @click="start(match.hero.actor, match.villain.actor)">Start Match</button>
 				</li>
 			</ol>
 		</div>
 		<div class="col-md-6 center" v-if="">
-			<ol>
+			<ol style="list-style-type: none">
 				<li v-for="(comment,index) in commentary">
 					{{comment}}
 				</li>
-
-				<button @click="clear">Clear</button>
 			</ol>
 		</div>
 	</div>
@@ -126,11 +124,17 @@ export default {
 					to: new Date()
 				}
 			},
+			chance: 0,
 			villainHealth: 100,
 			heroHealth: 100,
 			weaponDamage: '',
 			weaponName: '',
-			commentary: []
+			defence: 0,
+			heroName: '',
+			villainName: '',
+			review: [],
+			commentary: [],
+			matchComplete: false,
         }
     },
   	created() {
@@ -159,9 +163,13 @@ export default {
                 date: moment(this.date).format('DD/MM/YYYY'),
 				detail: false
 			};
-			console.log(this.hero.name + " v/s " + this.antiHero.name);
 			var fight = {
-				actor: this.hero.name + " v/s " + this.antiHero.name,
+				hero: {
+					actor: this.hero.name
+				},
+				villain: {
+					actor: this.antiHero.name
+				},
 				cause: this.cause,
 				place: this.place,
 				date: moment(this.date).format('DD/MM/YYYY'),
@@ -172,7 +180,7 @@ export default {
 				this.matches.push(fight);
 			})
 			.catch((error) => {
-				console.log(error);
+				console.debug(error);
 			});
 			this.superhero = this.villain = this.cause = this.place = this.date = '';
 			this.seen = false;
@@ -186,80 +194,122 @@ export default {
 				console.debug(error);
 			});
 		},
-		start : function () {
-			this.commentary.push('Match Start');
-			this.show = true;
+		start : function (hero,villain) {
+			this.heroHealth = 100;
+			this.villainHealth = 100;
+			this.heroName = hero;
+			this.villainName = villain;
+			this.clear();
+			this.comment('Match Start');
 			this.toss();
 		},
-		common : function () {
-			return Math.floor((Math.random() * 10));
-		},
 		toss : function () {
-			var winner = this.common() % 2;
-			if(winner == 0) {
-				this.commentary.push('Hero Win the toss');
-				this.commentary.push('Hero Health '+ 100 + ',' +' Villain Health '+ 100);
-				this.heroAttack(this.heroHealth=100, this.villainHealth=100);
+			var tossWin = Math.floor(Math.random() * 2);
+			var n = 0;
+			if(tossWin == 0) {
+				this.comment(this.heroName +' win the toss');
+				this.comment(this.heroName +' Health '+ 100 + ', '+ this.villainName +' Health '+ 100);
+				while(this.heroHealth >= 0 && this.villainHealth >= 0) {
+					if(n % 2 == 0) {
+						this.attack(this.chance = 0);
+					} else {
+						this.attack(this.chance = 1);
+					}
+					if(this.heroHealth <= 0) {
+						this.heroHealth = 0;
+						this.comment(this.heroName +' Dead');
+						this.showCommentary();
+						break;
+					} else if(this.villainHealth <= 0) {
+						this.villainHealth = 0;
+						this.comment(this.villainName +' Dead');
+						this.showCommentary();
+						break;
+					} else {
+						this.comment(this.heroName +" Health " + this.heroHealth +" "+ this.villainName +" Health " + this.villainHealth);
+					}
+					n++;
+				}
 			} else {
-				this.commentary.push('Villain Win the toss');
-				this.commentary.push('Hero Health '+ 100 + ',' +' Villain Health '+ 100);
-				this.villainAttack(this.heroHealth=100, this.villainHealth=100);
-			}
-		},
-		villainShield : function () {
-			this.villainHealth = this.villainHealth - (this.weaponDamage * 0.2);
-			this.commentary.push('Villain Shield the attack of the Hero but got a knick'+ ' ' +this.villainHealth);
-		},
-		heroShield : function () {
-			this.heroHealth = this.heroHealth - (this.weaponDamage * 0.2);
-			this.commentary.push('Hero Shield the attack of the Villain but got a knick'+ ' ' +this.heroHealth);
-		},
-		heroAttack : function () {
-			var weaponChoice = this.common();
-			this.weaponDamage = this.powers[weaponChoice].damage;
-			this.weaponName = this.powers[weaponChoice].powerName;
-			this.commentary.push('Hero attacked with'+ ' ' +this.weaponName);
-			if(this.common() % 2 == 0) {
-				this.villainShield(this.villainHealth, this.weaponDamage);
-			} else {
-				this.villainHealth = this.villainHealth - this.weaponDamage;
-				if(this.villainHealth <= 0){
-					this.villainHealth=0;
-					this.commentary.push('Hero hit the villain and strike his life down to'+ ' ' +this.villainHealth);
-				} else {
-					this.commentary.push('Hero hit the villain and strike his life down to'+ ' ' +this.villainHealth);
+				this.comment(this.villainName +' Win the toss');
+				this.comment(this.heroName +' Health '+ 100 + ', ' +this.villainName+' Health '+ 100);
+				while(this.heroHealth >= 0 && this.villainHealth >= 0) {
+					if(n % 2 != 0) {
+						this.attack(this.chance = 0);
+					} else {
+						this.attack(this.chance = 1);
+					}
+					if(this.heroHealth <= 0	) {
+						this.heroHealth = 0;
+						this.comment(this.heroName +' Dead');
+						this.showCommentary();
+						break;
+					}else if(this.villainHealth <= 0) {
+						this.villainHealth = 0;
+						this.comment(this.villainName +' Dead');
+						this.showCommentary();
+						break;
+					} else {
+						this.comment(this.heroName + " Health " + this.heroHealth +", "+ this.villainName + " Health " + this.villainHealth);
+					}
+					n++;
 				}
 			}
-			if(this.villainHealth > 0) {
-				this.villainAttack(this.villainHealth, this.heroHealth);
-			} else {
-				this.commentary.push('Villain Lost');
-			}
 		},
-		villainAttack : function () {
-			var weaponChoice = this.common();
+		attack : function () {
+			var max = this.powers.length;//Total number of powers present
+			var min = 0;
+			this.defence = Math.floor(Math.random() * 2);
+			var weaponChoice = Math.floor(Math.random() * (max - min) + min);
 			this.weaponDamage = this.powers[weaponChoice].damage;
-			this.weaponName = this.powers[weaponChoice].powerName;
-			this.commentary.push('Villain attacked with'+ ' ' +this.weaponName);
-			if(this.common() % 2 == 0) {
-				this.heroShield(this.heroHealth, this.weaponDamage);
-			} else {
-				this.heroHealth = this.heroHealth - this.weaponDamage;
-				if(this.heroHealth <= 0){
-					this.heroHealth=0;
-					this.commentary.push('Villain hit the hero and strike his life down to'+ ' ' +this.heroHealth);
+			this.weaponName = this.powers[weaponChoice].power_name;
+			if(this.chance == 0) {
+				if(this.defence == 0) {
+					this.shield(this.defence=0);//Shield is on for Villain
 				} else {
-					this.commentary.push('Villain hit the hero and strike his life down to'+ ' ' +this.heroHealth);
+					this.comment(this.heroName +' hit '+ this.villainName +' with ' + this.weaponName);
+					this.villainHealth = this.villainHealth - this.weaponDamage;
+				}
+			} else {
+				if(this.defence == 0) {
+					this.shield(this.defence=1);//Shield is on for Hero
+				} else {
+					this.comment(this.villainName + ' hit ' +this.heroName+ ' with ' + this.weaponName);
+					this.heroHealth = this.heroHealth - this.weaponDamage;
 				}
 			}
-			if(this.heroHealth > 0) {
-				this.heroAttack(this.villainHealth, this.heroHealth);
+		},
+		shield : function () {
+			if(this.defence==0) {
+				this.villainHealth = this.villainHealth - (this.weaponDamage * 0.2);
+				this.comment(this.heroName + ' hit '+ this.villainName +' with ' + this.weaponName);
+				this.comment(this.villainName +' shield attack of '+this.heroName+ ' but got a knick'+ ' ' +this.villainHealth);
 			} else {
-				this.commentary.push('Hero Lost');
+				this.heroHealth = this.heroHealth - (this.weaponDamage * 0.2);
+				this.comment(this.villainName+' hit '+this.heroName+ ' with ' + this.weaponName);
+				this.comment(this.heroName +' shield attack of '+this.villainName +' but got a knick'+ ' ' +this.heroHealth);
 			}
 		},
 		clear : function () {
 			this.commentary = [];
+			this.review = [];
+			return true;
+		},
+		comment : function (a) {
+			this.review.push(a);
+			return true;
+		},
+		showCommentary(){
+			let that =  this;
+			if(this.review.length > 0) {
+				var comments = this.review[0];
+				this.commentary.push(comments);
+				this.review.splice(0,1);
+				setTimeout(function () {
+					that.showCommentary();
+				},1000);
+			}
+			return true;
 		}
     },
 	computed: {
@@ -268,5 +318,4 @@ export default {
 		}
 	}
 }
-
 </script>

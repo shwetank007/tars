@@ -12,7 +12,12 @@ class Match extends Model
 
     public function hero()
     {
-        return $this->belongsTo(Hero::class);
+        return $this->hasOne(Hero::class, 'id', 'hero_id');
+    }
+
+    public function villain()
+    {
+        return $this->hasOne(Villain::class, 'id', 'villain_id');
     }
 
 }
