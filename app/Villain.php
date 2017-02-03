@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Villain extends Model
 {
     protected $fillable = [
-    	'actor', 'name', 'rival', 'partner',
+    	'avatar', 'actor', 'name', 'rival', 'partner',
     ];
 }

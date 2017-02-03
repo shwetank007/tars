@@ -13,6 +13,20 @@
 	.panel{
 		margin-top: 15px;
 	}
+	.villain {
+		margin-top: 40px;
+		border: 1px solid #999;
+		padding: 43px;
+		background-color: #e7e7e7;
+	}
+	.villain-style {
+		margin-left: 8px;
+		font-size: medium;
+		font-weight: bold;
+	}
+	.down-villain {
+		margin-top: 10px;
+	}
 </style>
 <template>
 	<div class="page-wrap">
@@ -22,6 +36,7 @@
 				<div class="container">
 					<div class="row centered-form">
 						<div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+							<form enctype="multipart/form-data" method="post">
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<h3 class="panel-title">Add a New Villain</h3>
@@ -29,6 +44,21 @@
 								<div class="panel-body">
 									<div v-if="errorMessage" class="bg-danger text-danger">
 										Villain Exists.
+									</div>
+									<div class="form-group center" :class="{'has-error': errors.has('avatar')}">
+										<div class="fileinput fileinput-new" data-provides="fileinput">
+											<div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 120px; height: 120px;border-radius: 50%;"></div>
+											<div>
+											<span class="btn btn-default btn-file">
+												<span class="fileinput-new">Upload Avatar</span>
+												<span class="fileinput-exists">Change</span>
+												<input type="file" v-on:change="upload" class="form-control input-sm"
+													   v-validate data-vv-rules="required" data-vv-name="avatar">
+											<span v-show="errors.has('avatar')" class="help-block">{{ errors.first('avatar') }}</span>
+											</span>
+												<a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+											</div>
+										</div>
 									</div>
 									<div class="form-group" :class="{'has-error': errors.has('actor')}">
 										<input v-model="actor" v-validate data-vv-rules="required" data-vv-name="actor" type="text"
@@ -57,24 +87,44 @@
 									<button @click.prevent="add" v-bind:disabled="!isValid" class="btn btn-info btn-block">Submit</button>
 								</div>
 							</div>
+							</form>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div>
-			<ol>
-				<li v-for="(villain,index) in antiHero" v-cloak>
-					{{ villain.actor }}
-					<div v-show="villain.detail">
-						Name        : {{ villain.name }}.<br>
-						Partner     : {{ villain.partner }}.<br>
-						Rival       : {{ villain.rival }}.
+		<div class="container">
+			<div class="col-md-12 villain" v-for="(villain,index) in antiHero">
+				<div class="col-md-4 center">
+					<div v-bind:class="[villain.detail ? 'distance' : '']">
+						<img :src="'images/'+villain.avatar" height="40px" width="40px" style="border-radius: 50%;">
+						<span class="villain-style">{{ villain.actor }}</span>
+						<div class="vertical-line" style="height: 45px;"></div>
 					</div>
-					<button @click="villain.detail = !villain.detail">{{(villain.detail)?'Hide Detail':'Detail' }}</button>
-					<button @click="remove(index,villain.id)">Delete</button>
-				</li>
-			</ol>
+				</div>
+				<div class="col-md-6 center">
+					<div class="down-hero" v-show="!villain.detail">
+						Description
+					</div>
+					<div v-show="villain.detail">
+						<img :src="'images/'+villain.avatar" height="100px" width="100px" style="border-radius: 50%;">
+						<div class="design">
+							<b>{{ villain.actor }}</b>
+						</div>
+						<div>
+							<b>Name        :</b> {{ villain.name }}.<br>
+							<b>Partner     :</b> {{ villain.partner }}.<br>
+							<b>Rival       :</b> {{ villain.rival }}.
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2 center down-villain">
+					<div v-bind:class="[villain.detail ? 'distance' : '']">
+						<button @click="villain.detail = !villain.detail" style="position: inherit;">{{(villain.detail)?'Hide Detail':'Detail' }}</button>
+						<button @click="remove(index,villain.id)">Delete</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -83,6 +133,7 @@ export default {
 	data: function () {
 		return {
 			seen: false,
+			avatar:'',
 			actor: '',
 			name: '',
 			partner: '',
@@ -95,32 +146,45 @@ export default {
 		this.fetch();
 	},
 	methods: {
+		upload: function (e) {
+			this.avatar = e.target.files[0] || e.dataTransfer.files[0];
+		},
 		fetch: function () {
 			let that = this;
 			this.$http.get('api/villain')
 			.then((response) => {
 				that.antiHero = JSON.parse(response.body);
 			})
-			.catch((response) => {
-				console.log('fail');
-			})
+			.catch((error) => {
+				console.debug(error);
+			});
 		},
 		add: function () {
-			var villain = {
-				actor: this.actor,
-				name: this.name,
-				partner: this.partner,
-				rival: this.rival,
-				detail: false
-			};
-			this.$http.post('api/villain', villain)
+			var form = new FormData;
+			form.append('avatar',this.avatar);
+			form.append('actor',this.actor);
+			form.append('name',this.name);
+			form.append('partner',this.partner);
+			form.append('rival',this.rival);
+			form.append('detail', '0');
+			this.$http.post('api/villain', form)
 			.then((response) => {
+				var all = JSON.parse(response.body);
+				var villain = {
+					avatar: all.avatar,
+					actor: this.actor,
+					name: this.name,
+					weakness: this.weakness,
+					partner: this.partner,
+					rival: this.rival,
+					detail: false
+				};
 				this.antiHero.push(villain);
-				this.actor = this.actor = this.name = this.partner = this.rival = '';
+				this.actor = this.actor = this.name = this.partner = this.rival = this.avatar = '';
 				this.seen = false;
 			})
-			.catch((response) => {
-				console.log('error');
+			.catch((error) => {
+				console.debug(error);
 				this.errorMessage = true;
 			});
 		},
@@ -129,14 +193,14 @@ export default {
 			.then((response) => {
 				this.antiHero.splice(item,1);
 			})
-			.catch((response) => {
-				console.log('Not Deleted');
+			.catch((error) => {
+				console.debug(error);
 			});
 		}
 	},
 	computed: {
 		isValid: function () {
-			return this.actor != '' && this.name != '' && this.partner != '' && this.rival != ''
+			return this.actor != '' && this.name != '' && this.partner != '' && this.rival != '' && this.avatar != ''
 		}
 	}
 }

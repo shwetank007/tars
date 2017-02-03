@@ -15,13 +15,14 @@ class Heroes extends Migration
     {
         Schema::create('heroes', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('avatar');
             $table->string('actor');
             $table->string('name');
             $table->unique(['actor','name']);
             $table->string('weakness');
             $table->string('partner');
             $table->string('rival');
-            $table->string('detail');
+            $table->boolean('detail');
             $table->timestamps();
         });
     }

@@ -15,12 +15,13 @@ class Villains extends Migration
     {
         Schema::create('villains', function (Blueprint $table){
             $table->increments('id');
+            $table->string('avatar');
             $table->string('actor');
             $table->string('name');
             $table->unique(['actor','name']);
             $table->string('partner');
             $table->string('rival');
-            $table->string('detail');
+            $table->boolean('detail');
             $table->timestamps();
         });
     }

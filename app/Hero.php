@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Hero extends Model
 {
     protected $fillable = [
-    	'actor', 'name', 'weakness', 'rival', 'partner',
+    	'avatar', 'actor', 'name', 'weakness', 'rival', 'partner',
     ];
 }

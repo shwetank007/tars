@@ -19,9 +19,16 @@ class MatchController extends Controller
         $match = Match::with('hero','villain')->get();
         $power = Power::all();
 
-        return response()->json(['fixture'=>$match,'heros'=>$hero,'aVillain'=>$villain,'power'=>$power]);
+        return response()->json(['fixture'=>$match,'heroes'=>$hero,'antiHeroes'=>$villain,'power'=>$power]);
     }
 
+    public function show($id)
+    {
+        $match = Match::with('hero','villain')->find($id);
+        $power = Power::all();
+
+        return response()->json(['fixture'=>$match,'power'=>$power]);
+    }
    public function store(Request $request)
     {
         DB::beginTransaction();

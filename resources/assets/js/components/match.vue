@@ -17,6 +17,52 @@
 		height: 30px;
 		width: 146px;
 	}
+	.matches {
+		margin-top: 75px;
+		border: 1px solid #999;
+		padding: 43px;
+		border-radius: 20px;
+		background-color: #e7e7e7;
+	}
+	.set {
+		font-size: 21px;
+		line-height: 2;
+	}
+	.right {
+		float: right;
+		text-align: center;
+	}
+	.left {
+		float: left;
+		text-align: center;
+	}
+	.versus {
+		font-size: 12px;
+		font-weight: bold;
+		text-align: center;
+		margin-top: 7px;
+		margin-left: 5px;
+	}
+	.button-reset {
+		margin-top: 45px;
+		text-align: center;
+	}
+	.circle {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		font-size: 14px;
+		color: #fff;
+		line-height: 40px;
+		text-align: center;
+		background: dimgrey;
+		margin: 48px auto;
+	}
+	.detail {
+		margin-top: 20px;
+		line-height: 1.8;
+		text-align: center;
+	}
 </style>
 <template>
 	<div class="page-wrap">
@@ -36,17 +82,17 @@
 											<div class="form-group" :class="{'has-error': errors.has('hero')}">
 												<select class="select-picker form-control" v-model="hero" v-validate data-vv-rules="required" data-vv-name="hero">
 													<option value="">Select Hero</option>
-													<option v-for="(superhero,index) in superheroes" v-bind:value="{id: superhero.id, name: superhero.actor}">{{superhero.actor}}</option>
+													<option v-for="(superhero,index) in superheroes" v-bind:value="{id: superhero.id, name: superhero.actor, avatar: superhero.avatar}">{{superhero.actor}}</option>
 												</select>
 												<span v-show="errors.has('hero')" class="help-block">{{ errors.first('hero') }}</span>
 											</div>
 										</div>
-										<div class="col-md-1">V/S</div>
+										<div class="col-md-1 versus">V/S</div>
 										<div class="col-md-5">
 											<div class="form-group" :class="{'has-error': errors.has('antiHero')}">
 												<select class="select-picker form-control" v-model="antiHero" v-validate data-vv-rules="required" data-vv-name="antiHero">
 													<option value="">Select Villain</option>
-													<option v-for="(villain,index) in villains" v-bind:value="{id: villain.id, name: villain.actor}">{{villain.actor}}</option>
+													<option v-for="(villain,index) in villains" v-bind:value="{id: villain.id, name: villain.actor, avatar: villain.avatar}">{{villain.actor}}</option>
 												</select>
 												<span v-show="errors.has('antiHero')" class="help-block">{{ errors.first('antiHero') }}</span>
 											</div>
@@ -75,27 +121,35 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
-			<ol>
-				<li v-for="(match,index) in matches" v-cloak>
-					{{match.hero.actor}} v/s {{match.villain.actor}}
-					<div v-show="match.detail">
-						Cause       : {{ match.cause }}.<br>
-						Place       : {{ match.place }}.<br>
-						Date        : {{match.date}}.
-					</div>
+		<div class="container matches" v-for="(match,index) in matches" v-cloak>
+			<div class="col-md-4 set">
+				<div class="left">
+					<img :src="'images/'+match.hero.avatar" height="120px" width="120px" style="border-radius: 50%;"><br>
+					{{match.hero.actor}}
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="circle">
+					<b>V/S</b>
+				</div>
+				<div class="button-reset">
 					<button @click="match.detail = !match.detail">{{(match.detail)?'Hide Detail':'Detail' }}</button>
 					<button @click="remove(index,match.id)">Delete</button>
-					<button @click="start(match.hero.actor, match.villain.actor)">Start Match</button>
-				</li>
-			</ol>
-		</div>
-		<div class="col-md-6 center" v-if="">
-			<ol style="list-style-type: none">
-				<li v-for="(comment,index) in commentary">
-					{{comment}}
-				</li>
-			</ol>
+					<router-link :to="{ name: 'fight', params: { id: match.id }}"><button>Start Match</button></router-link>
+					<!--<button v-on:click="start(match.hero.actor, match.villain.actor)">Start Match</button>-->
+				</div>
+				<div v-show="match.detail" class="detail">
+					<b>Cause       :</b> {{ match.cause }}.<br>
+					<b>Place       :</b> {{ match.place }}.<br>
+					<b>Date        :</b> {{match.date}}.
+				</div>
+			</div>
+			<div class="col-md-4 set">
+				<div class="right">
+					<img :src="'images/'+match.villain.avatar" height="120px" width="120px" style="border-radius: 50%;"><br>
+					{{match.villain.actor}}
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -103,7 +157,6 @@
 <script>
 import Datepicker from 'vuejs-datepicker';
 var moment = require('moment');
-
 export default {
     components: { Datepicker },
     data: function () {
@@ -123,18 +176,7 @@ export default {
 				disabled: {
 					to: new Date()
 				}
-			},
-			chance: 0,
-			villainHealth: 100,
-			heroHealth: 100,
-			weaponDamage: '',
-			weaponName: '',
-			defence: 0,
-			heroName: '',
-			villainName: '',
-			review: [],
-			commentary: [],
-			matchComplete: false,
+			}
         }
     },
   	created() {
@@ -146,8 +188,8 @@ export default {
 			.then((response) => {
 			    var all = JSON.parse(response.body);
                 this.matches = all.fixture;
-                this.superheroes = all.heros;
-                this.villains = all.aVillain;
+                this.superheroes = all.heroes;
+                this.villains = all.antiHeroes;
 				this.powers	= all.power;
 			})
 			.catch((error) => {
@@ -161,14 +203,16 @@ export default {
 				cause: this.cause,
 				place: this.place,
                 date: moment(this.date).format('DD/MM/YYYY'),
-				detail: false
+				detail: '0'
 			};
 			var fight = {
 				hero: {
-					actor: this.hero.name
+					actor: this.hero.name,
+					avatar: this.hero.avatar
 				},
 				villain: {
-					actor: this.antiHero.name
+					actor: this.antiHero.name,
+					avatar: this.antiHero.avatar
 				},
 				cause: this.cause,
 				place: this.place,
@@ -193,123 +237,6 @@ export default {
 			.catch((error) => {
 				console.debug(error);
 			});
-		},
-		start : function (hero,villain) {
-			this.heroHealth = 100;
-			this.villainHealth = 100;
-			this.heroName = hero;
-			this.villainName = villain;
-			this.clear();
-			this.comment('Match Start');
-			this.toss();
-		},
-		toss : function () {
-			var tossWin = Math.floor(Math.random() * 2);
-			var n = 0;
-			if(tossWin == 0) {
-				this.comment(this.heroName +' win the toss');
-				this.comment(this.heroName +' Health '+ 100 + ', '+ this.villainName +' Health '+ 100);
-				while(this.heroHealth >= 0 && this.villainHealth >= 0) {
-					if(n % 2 == 0) {
-						this.attack(this.chance = 0);
-					} else {
-						this.attack(this.chance = 1);
-					}
-					if(this.heroHealth <= 0) {
-						this.heroHealth = 0;
-						this.comment(this.heroName +' Dead');
-						this.showCommentary();
-						break;
-					} else if(this.villainHealth <= 0) {
-						this.villainHealth = 0;
-						this.comment(this.villainName +' Dead');
-						this.showCommentary();
-						break;
-					} else {
-						this.comment(this.heroName +" Health " + this.heroHealth +" "+ this.villainName +" Health " + this.villainHealth);
-					}
-					n++;
-				}
-			} else {
-				this.comment(this.villainName +' Win the toss');
-				this.comment(this.heroName +' Health '+ 100 + ', ' +this.villainName+' Health '+ 100);
-				while(this.heroHealth >= 0 && this.villainHealth >= 0) {
-					if(n % 2 != 0) {
-						this.attack(this.chance = 0);
-					} else {
-						this.attack(this.chance = 1);
-					}
-					if(this.heroHealth <= 0	) {
-						this.heroHealth = 0;
-						this.comment(this.heroName +' Dead');
-						this.showCommentary();
-						break;
-					}else if(this.villainHealth <= 0) {
-						this.villainHealth = 0;
-						this.comment(this.villainName +' Dead');
-						this.showCommentary();
-						break;
-					} else {
-						this.comment(this.heroName + " Health " + this.heroHealth +", "+ this.villainName + " Health " + this.villainHealth);
-					}
-					n++;
-				}
-			}
-		},
-		attack : function () {
-			var max = this.powers.length;//Total number of powers present
-			var min = 0;
-			this.defence = Math.floor(Math.random() * 2);
-			var weaponChoice = Math.floor(Math.random() * (max - min) + min);
-			this.weaponDamage = this.powers[weaponChoice].damage;
-			this.weaponName = this.powers[weaponChoice].power_name;
-			if(this.chance == 0) {
-				if(this.defence == 0) {
-					this.shield(this.defence=0);//Shield is on for Villain
-				} else {
-					this.comment(this.heroName +' hit '+ this.villainName +' with ' + this.weaponName);
-					this.villainHealth = this.villainHealth - this.weaponDamage;
-				}
-			} else {
-				if(this.defence == 0) {
-					this.shield(this.defence=1);//Shield is on for Hero
-				} else {
-					this.comment(this.villainName + ' hit ' +this.heroName+ ' with ' + this.weaponName);
-					this.heroHealth = this.heroHealth - this.weaponDamage;
-				}
-			}
-		},
-		shield : function () {
-			if(this.defence==0) {
-				this.villainHealth = this.villainHealth - (this.weaponDamage * 0.2);
-				this.comment(this.heroName + ' hit '+ this.villainName +' with ' + this.weaponName);
-				this.comment(this.villainName +' shield attack of '+this.heroName+ ' but got a knick'+ ' ' +this.villainHealth);
-			} else {
-				this.heroHealth = this.heroHealth - (this.weaponDamage * 0.2);
-				this.comment(this.villainName+' hit '+this.heroName+ ' with ' + this.weaponName);
-				this.comment(this.heroName +' shield attack of '+this.villainName +' but got a knick'+ ' ' +this.heroHealth);
-			}
-		},
-		clear : function () {
-			this.commentary = [];
-			this.review = [];
-			return true;
-		},
-		comment : function (a) {
-			this.review.push(a);
-			return true;
-		},
-		showCommentary(){
-			let that =  this;
-			if(this.review.length > 0) {
-				var comments = this.review[0];
-				this.commentary.push(comments);
-				this.review.splice(0,1);
-				setTimeout(function () {
-					that.showCommentary();
-				},1000);
-			}
-			return true;
 		}
     },
 	computed: {

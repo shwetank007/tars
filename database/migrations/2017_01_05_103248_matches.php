@@ -29,8 +29,8 @@ class Matches extends Migration
                 ->onUpdate('cascade');
             $table->string('cause');
             $table->string('place');
-            $table->string('detail');
             $table->string('date');
+            $table->boolean('detail');
             $table->timestamps();
         });
     }
