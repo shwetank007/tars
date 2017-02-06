@@ -29,6 +29,7 @@ class MatchController extends Controller
 
         return response()->json(['fixture'=>$match,'power'=>$power]);
     }
+
    public function store(Request $request)
     {
         DB::beginTransaction();

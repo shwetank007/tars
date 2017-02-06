@@ -17,7 +17,6 @@ class Powers extends Migration
             $table->increments('id');
             $table->string('power_name');
             $table->string('damage');
-            $table->string('range');
             $table->timestamps();
         });
     }

@@ -3,6 +3,16 @@
         margin-top: 45px;
         text-align: center;
     }
+    .review {
+        padding-top: 1px;
+        padding-bottom: 4px;
+        font-family: lato,sans-serif;
+        font-weight: 500;
+        font-size: 13px;
+    }
+    .strong{
+        font-weight: bold;
+    }
 </style>
 <template>
     <div class="page-wrap">
@@ -12,11 +22,11 @@
                     <img :src="'images/'+match.hero.avatar" height="120px" width="120px" style="border-radius: 50%;"><br>
                     {{match.hero.actor}}
                 </div>
+                <span>{{match.hero.actor}} Life: {{heroLife}}</span>
             </div>
             <div class="col-md-8 comment">
                 <ol style="list-style-type: none">
-                    <li v-for="(comment,index) in commentary">
-                        {{comment}}
+                    <li v-for="(comment,index) in commentary"  v-html="comment.view" class="review">
                     </li>
                 </ol>
             </div>
@@ -25,6 +35,7 @@
                     <img :src="'images/'+match.villain.avatar" height="120px" width="120px" style="border-radius: 50%;"><br>
                     {{match.villain.actor}}
                 </div>
+                <span>{{match.villain.actor}} Life: {{villainLife}}</span>
             </div>
         </div>
 </template>
@@ -42,8 +53,10 @@ export default {
             defence: 0,
             heroName: '',
             villainName: '',
-            narration: [],
-            commentary: [],
+            narration: {},
+            commentary: {},
+            heroLife:100,
+            villainLife:100,
             matchComplete: false
         }
     },
@@ -72,15 +85,22 @@ export default {
             this.heroName = hero;
             this.villainName = villain;
             this.clear();
-            this.comment('Match Start');
+            this.comment({
+                view: '<b>Match Start</b>',
+                heroLife: this.heroHealth,
+                villainLife: this.villainHealth
+            });
             this.toss();
         },
         toss : function () {
             var tossWin = Math.floor(Math.random() * 2);
             var n = 0;
             if(tossWin == 0) {
-                this.comment(this.heroName +' win the toss');
-                this.comment(this.heroName +' Health '+ 100 + ', '+ this.villainName +' Health '+ 100);
+                this.comment({
+                    view: '<font color="green"><i>' + this.heroName + '</i>' +' won the toss</font>',
+                    heroLife: this.heroHealth,
+                    villainLife: this.villainHealth
+                });
                 while(this.heroHealth >= 0 && this.villainHealth >= 0) {
                     if(n % 2 == 0) {
                         this.attack(this.chance = 0);
@@ -89,22 +109,37 @@ export default {
                     }
                     if(this.heroHealth <= 0) {
                         this.heroHealth = 0;
-                        this.comment(this.heroName +' Dead');
+                        this.comment({
+                            view: '<font color="red"><i>' + this.heroName+ ' ' + '</i>' +'Dead</font>',
+                            heroLife: this.heroHealth,
+                            villainLife: this.villainHealth
+                        });
                         this.showCommentary();
                         break;
                     } else if(this.villainHealth <= 0) {
                         this.villainHealth = 0;
-                        this.comment(this.villainName +' Dead');
+                        this.comment({
+                            view: '<font color="red"><i>' + this.villainName + '</i>'+ ' ' +'Dead</font>',
+                            heroLife: this.heroHealth,
+                            villainLife: this.villainHealth
+                        });
                         this.showCommentary();
                         break;
                     } else {
-                        this.comment(this.heroName +" Health " + this.heroHealth +" "+ this.villainName +" Health " + this.villainHealth);
+                        this.comment({
+                            view: this.heroName +" Health " + this.heroHealth +" "+ this.villainName +" Health " + this.villainHealth,
+                            heroLife: this.heroHealth,
+                            villainLife: this.villainHealth
+                        });
                     }
                     n++;
                 }
             } else {
-                this.comment(this.villainName +' Win the toss');
-                this.comment(this.heroName +' Health '+ 100 + ', ' +this.villainName+' Health '+ 100);
+                this.comment({
+                    view: '<font color="green"><i>' +this.villainName  + '</i>' +' win the toss</font>',
+                    heroLife: this.heroHealth,
+                    villainLife: this.villainHealth
+                });
                 while(this.heroHealth >= 0 && this.villainHealth >= 0) {
                     if(n % 2 != 0) {
                         this.attack(this.chance = 0);
@@ -113,16 +148,28 @@ export default {
                     }
                     if(this.heroHealth <= 0	) {
                         this.heroHealth = 0;
-                        this.comment(this.heroName +' Dead');
+                        this.comment({
+                            view: '<font color="red"><i>' + this.heroName+ ' ' + '</i>' +'Dead</font>',
+                            heroLife: this.heroHealth,
+                            villainLife: this.villainHealth
+                        });
                         this.showCommentary();
                         break;
                     }else if(this.villainHealth <= 0) {
                         this.villainHealth = 0;
-                        this.comment(this.villainName +' Dead');
+                        this.comment({
+                            view: '<font color="red"><i>' + this.villainName + '</i>'+ ' ' +'Dead</font>',
+                            heroLife: this.heroHealth,
+                            villainLife: this.villainHealth
+                        });
                         this.showCommentary();
                         break;
                     } else {
-                        this.comment(this.heroName + " Health " + this.heroHealth +", "+ this.villainName + " Health " + this.villainHealth);
+                        this.comment({
+                            view: '<i>' + this.heroName + '</i>' + " Health " + this.heroHealth +", "+ '<i>' + this.villainName + '</i>' + " Health " + this.villainHealth,
+                            heroLife: this.heroHealth,
+                            villainLife: this.villainHealth
+                        });
                     }
                     n++;
                 }
@@ -139,36 +186,68 @@ export default {
                 if (this.defence == 0) {
                     this.shield(this.defence = 0);//Shield is on for Villain
                 } else {
-                    this.comment(this.heroName + ' hit ' + this.villainName + ' with ' + this.weaponName);
                     this.villainHealth = this.villainHealth - this.weaponDamage;
+                    this.comment({
+                        view: '<i>' + this.heroName + '</i>' + '<font color="red"> hit</font> ' +'<i>'+ this.villainName+'</i>' + ' with ' + '<b>' + this.weaponName +'</b>',
+                        heroLife: this.heroHealth,
+                        villainLife: this.villainHealth
+                    });
                 }
             } else {
                 if (this.defence == 0) {
                     this.shield(this.defence = 1);//Shield is on for Hero
                 } else {
-                    this.comment(this.villainName + ' hit ' + this.heroName + ' with ' + this.weaponName);
                     this.heroHealth = this.heroHealth - this.weaponDamage;
+                    this.comment({
+                        view: '<i>' + this.villainName +'</i>' + '<font color="red"> hit</font> ' +'<i>'+ this.heroName+'</i>' + ' with ' + '<b>' + this.weaponName +'</b>',
+                        heroLife: this.heroHealth,
+                        villainLife: this.villainHealth
+                    });
                 }
             }
         },
         shield : function () {
             if(this.defence==0) {
                 this.villainHealth = this.villainHealth - (this.weaponDamage * 0.2);
-                this.comment(this.heroName + ' hit '+ this.villainName +' with ' + this.weaponName);
+                this.comment({
+                    view: '<i>'+this.heroName+'</i>' + '<font color="red"> hit</font> '+'<i>'+ this.villainName+'</i>' +' with ' + '<b>' + this.weaponName + '</b>',
+                    heroLife: this.heroHealth,
+                    villainLife: this.villainHealth
+                });
                 if(this.villainHealth < 0) {
                     this.villainHealth = 0;
-                    this.comment(this.villainName +' shield attack of '+this.heroName+ ' but got a knick'+ ' ' +this.villainHealth);
+                    this.comment({
+                        view: '<i>'+this.villainName+'</i>' +'<font color="green"> shield </font>attack of '+'<i>'+ this.heroName+'</i>' + ' but got a knick'+ ' ' +this.villainHealth,
+                        heroLife: this.heroHealth,
+                        villainLife: this.villainHealth
+                    });
                 } else {
-                    this.comment(this.villainName +' shield attack of '+this.heroName+ ' but got a knick'+ ' ' +this.villainHealth);
+                    this.comment({
+                        view: '<i>'+this.villainName+'</i>' +'<font color="green"> shield</font> attack of '+'<i>'+ this.heroName+'</i>' + ' but got a knick'+ ' ' +this.villainHealth,
+                        heroLife: this.heroHealth,
+                        villainLife: this.villainHealth
+                    });
                 }
             } else {
                 this.heroHealth = this.heroHealth - (this.weaponDamage * 0.2);
-                this.comment(this.villainName+' hit '+this.heroName+ ' with ' + this.weaponName);
+                this.comment({
+                    view: this.villainName+'<font color="red"> hit</font> '+this.heroName+ ' with ' + '<b>' + this.weaponName + '</b>',
+                    heroLife: this.heroHealth,
+                    villainLife: this.villainHealth
+                });
                 if(this.heroHealth < 0) {
                     this.heroHealth = 0;
-                    this.comment(this.heroName +' shield attack of '+this.villainName +' but got a knick'+ ' ' +this.heroHealth);
+                    this.comment({
+                        view: '<i>'+this.heroName+'</i>' +'<font color="green"> shield</font> attack of '+'<i>'+ this.villainName+'</i>' +' but got a knick'+ ' ' +this.heroHealth,
+                        heroLife: this.heroHealth,
+                        villainLife: this.villainHealth
+                    });
                 } else {
-                    this.comment(this.heroName +' shield attack of '+this.villainName +' but got a knick'+ ' ' +this.heroHealth);
+                    this.comment({
+                        view: '<i>'+this.heroName+'</i>' +'<font color="green"> shield</font> attack of '+'<i>'+ this.villainName+'</i>' +' but got a knick'+ ' ' +this.heroHealth,
+                        heroLife: this.heroHealth,
+                        villainLife: this.villainHealth
+                    });
                 }
             }
         },
@@ -183,8 +262,10 @@ export default {
         },
         showCommentary() {
             let that =  this;
-            if(this.narration.length > 0) {
-                var comments = this.narration[0];
+            if(this.narration.length > 0 ) {
+                let comments = this.narration[0];
+                this.heroLife = comments.heroLife;
+                this.villainLife = comments.villainLife;
                 this.commentary.push(comments);
                 this.narration.splice(0,1);
                 setTimeout(function () {

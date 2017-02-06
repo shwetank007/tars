@@ -1,33 +1,3 @@
-<style>
-	html,body{
-		background-color: #d3d3d3;
-		height:100%;
-	}
-	.centered-form{
-		margin-top: 60px;
-	}
-
-	.centered-form .panel{
-		background: rgba(255, 255, 255, 0.8);
-	}
-	.panel{
-		margin-top: 15px;
-	}
-	.villain {
-		margin-top: 40px;
-		border: 1px solid #999;
-		padding: 43px;
-		background-color: #e7e7e7;
-	}
-	.villain-style {
-		margin-left: 8px;
-		font-size: medium;
-		font-weight: bold;
-	}
-	.down-villain {
-		margin-top: 10px;
-	}
-</style>
 <template>
 	<div class="page-wrap">
 		<div class="center">
@@ -94,17 +64,17 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="col-md-12 villain" v-for="(villain,index) in antiHero">
+			<div class="col-md-12 hv-look" v-for="(villain,index) in antiHero">
 				<div class="col-md-4 center">
 					<div v-bind:class="[villain.detail ? 'distance' : '']">
 						<img :src="'images/'+villain.avatar" height="40px" width="40px" style="border-radius: 50%;">
-						<span class="villain-style">{{ villain.actor }}</span>
+						<span class="hv-style">{{ villain.actor }}</span>
 						<div class="vertical-line" style="height: 45px;"></div>
 					</div>
 				</div>
 				<div class="col-md-6 center">
-					<div class="down-hero" v-show="!villain.detail">
-						Description
+					<div class="hv-down" v-show="!villain.detail">
+						{{villain.actor}} Description
 					</div>
 					<div v-show="villain.detail">
 						<img :src="'images/'+villain.avatar" height="100px" width="100px" style="border-radius: 50%;">
@@ -118,7 +88,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-2 center down-villain">
+				<div class="col-md-2 center hv-down">
 					<div v-bind:class="[villain.detail ? 'distance' : '']">
 						<button @click="villain.detail = !villain.detail" style="position: inherit;">{{(villain.detail)?'Hide Detail':'Detail' }}</button>
 						<button @click="remove(index,villain.id)">Delete</button>

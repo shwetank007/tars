@@ -2,9 +2,17 @@ html, body {
     background-color: #d3d3d3;
     height: 100%;
 }
+.centered-form{
+    margin-top: 60px;
+}
+.centered-form .panel{
+    background: rgba(255, 255, 255, 0.8);
+}
+.panel{
+    margin-top: 15px;
+}
 .page-wrap {
-    min-height: 100%;
-    /* equal to footer height */
+    min-height: 100%;/* equal to footer height */
     margin-bottom: 115px;
 }
 .page-wrap:after {
@@ -21,4 +29,24 @@ html, body {
 }
 .hp {
     height:66%;
+}
+.hv-look { /*Hero and villain Look*/
+    margin-top: 40px;
+    border: 1px solid #999;
+    padding: 43px;
+    background-color: #e7e7e7;
+}
+.hv-style { /*Hero and Villain Style*/
+    margin-left: 8px;
+    font-size: medium;
+    font-weight: bold;
+}
+.hv-down { /*Moving Down hero and Villain*/
+    margin-top: 10px;
+}
+div.vertical-line{ /*Vertical Line to show Partition*/
+    width: 0px; /* Use only border style */
+    height: 100%;
+    float: right;
+    border: 1px inset #e7e7e7;/* This is default border style for <hr> tag */
 }

@@ -1,54 +1,10 @@
 <style>
-	.centered-form{
-		margin-top: 60px;
-	}
-
-	.centered-form .panel{
-		background: rgba(255, 255, 255, 0.8);
-	}
-	.panel{
-		margin-top: 15px;
-	}
-	.hero {
-		margin-top: 40px;
-		/*margin-bottom: 30px;*/
-		border: 1px solid #999;
-		padding: 43px;
-		/*border-radius: 20px;*/
-		background-color: #e7e7e7;
-		/*border-top-left-radius: 20px;*/
-		/*border-bottom-right-radius: 20px;*/
-
-	}
-	/*.details{*/
-		/*margin-top: 40px;*/
-		/*!*margin-bottom: 30px;*!*/
-		/*border: 1px solid #999;*/
-		/*padding: 43.5px;*/
-		/*background-color: #e7e7e7;*/
-		/*border-top-right-radius: 20px;*/
-		/*border-bottom-right-radius: 20px;*/
-	/*}*/
-	div.vertical-line{
-		width: 0px; /* Use only border style */
-		height: 100%;
-		float: right;
-		border: 1px inset #e7e7e7;/* This is default border style for <hr> tag */
-	}
 	.distance {
 		margin-top: 75px;
 	}
 	.design {
 		font-size: large;
 		margin: 6px 0px 6px 0px;
-	}
-	.hero-style {
-		margin-left: 8px;
-		font-size: medium;
-		font-weight: bold;
-	}
-	.down-hero {
-		margin-top: 10px;
 	}
 </style>
 <template>
@@ -123,17 +79,17 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="col-md-12 hero" v-for="(hero,index) in heroes">
+			<div class="col-md-12 hv-look" v-for="(hero,index) in heroes">
 				<div class="col-md-4 center">
 					<div v-bind:class="[hero.detail ? 'distance' : '']">
 						<img :src="'images/'+hero.avatar" height="50px" width="50px" style="border-radius: 50%;">
-						<span class="hero-style">{{ hero.actor }}</span>
+						<span class="hv-style">{{ hero.actor }}</span>
 						<div class="vertical-line" style="height: 45px;"></div>
 					</div>
 				</div>
 				<div class="col-md-6 center">
-					<div class="down-hero" v-show="!hero.detail">
-						Description
+					<div class="hv-down" v-show="!hero.detail">
+						{{hero.actor}} Description
 					</div>
 					<div v-show="hero.detail">
 						<img :src="'images/'+hero.avatar" height="100px" width="100px" style="border-radius: 50%;">
@@ -148,7 +104,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-2 center down-hero">
+				<div class="col-md-2 center hv-down">
 					<div v-bind:class="[hero.detail ? 'distance' : '']">
 						<button @click="hero.detail = !hero.detail" style="position: inherit;">{{(hero.detail)?'Hide Detail':'Detail' }}</button>
 						<button @click="remove(index,hero.id)">Delete</button>

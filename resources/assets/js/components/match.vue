@@ -1,18 +1,4 @@
 <style>
-	html,body{
-		background-color: #d3d3d3;
-		height:100%;
-	}
-	.centered-form{
-		margin-top: 60px;
-	}
-
-	.centered-form .panel{
-		background: rgba(255, 255, 255, 0.8);
-	}
-	.panel{
-		margin-top: 15px;
-	}
 	.select-picker {
 		height: 30px;
 		width: 146px;
@@ -24,15 +10,15 @@
 		border-radius: 20px;
 		background-color: #e7e7e7;
 	}
-	.set {
+	.font-line {
 		font-size: 21px;
 		line-height: 2;
 	}
-	.right {
+	.right-align {
 		float: right;
 		text-align: center;
 	}
-	.left {
+	.left-align {
 		float: left;
 		text-align: center;
 	}
@@ -122,8 +108,8 @@
 			</div>
 		</div>
 		<div class="container matches" v-for="(match,index) in matches" v-cloak>
-			<div class="col-md-4 set">
-				<div class="left">
+			<div class="col-md-4 font-line">
+				<div class="left-align">
 					<img :src="'images/'+match.hero.avatar" height="120px" width="120px" style="border-radius: 50%;"><br>
 					{{match.hero.actor}}
 				</div>
@@ -144,8 +130,8 @@
 					<b>Date        :</b> {{match.date}}.
 				</div>
 			</div>
-			<div class="col-md-4 set">
-				<div class="right">
+			<div class="col-md-4 font-line">
+				<div class="right-align">
 					<img :src="'images/'+match.villain.avatar" height="120px" width="120px" style="border-radius: 50%;"><br>
 					{{match.villain.actor}}
 				</div>

@@ -19,13 +19,13 @@ class Matches extends Migration
             $table->foreign('hero_id')
                 ->references('id')
                 ->on('heroes')
-                ->onDelete('SET NULL')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->unsignedInteger('villain_id')->nullable();
             $table->foreign('villain_id')
                 ->references('id')
                 ->on('villains')
-                ->onDelete('SET NULL')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('cause');
             $table->string('place');
