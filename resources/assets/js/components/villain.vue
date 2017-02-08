@@ -114,6 +114,7 @@ export default {
 			errorMessage: false
 		}
 	},
+	name: 'villain',
 	created() {
 		this.fetch();
 	},

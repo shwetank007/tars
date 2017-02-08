@@ -60,6 +60,7 @@ export default {
             matchComplete: false
         }
     },
+    name: 'fight',
     created() {
         this.fetch();
     },

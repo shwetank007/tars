@@ -131,6 +131,7 @@ export default {
 			errorMessage: false,
 		}
 	},
+	name: 'hero',
 	created () {
 		this.fetch();
 	},

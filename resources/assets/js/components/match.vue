@@ -154,6 +154,7 @@ export default {
 			}
         }
     },
+	name: 'match',
   	created() {
 		this.fetch();
 	},
