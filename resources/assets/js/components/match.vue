@@ -10,18 +10,7 @@
 		border-radius: 20px;
 		background-color: #e7e7e7;
 	}
-	.font-line {
-		font-size: 21px;
-		line-height: 2;
-	}
-	.right-align {
-		float: right;
-		text-align: center;
-	}
-	.left-align {
-		float: left;
-		text-align: center;
-	}
+
 	.versus {
 		font-size: 12px;
 		font-weight: bold;

@@ -17,8 +17,8 @@
 <template>
     <div class="page-wrap">
         <div class="container matches">
-            <div class="col-md-2 set">
-                <div class="left">
+            <div class="col-md-2 font-line">
+                <div class="left-align">
                     <img :src="'images/'+match.hero.avatar" height="120px" width="120px" style="border-radius: 50%;"><br>
                     {{match.hero.actor}}
                 </div>
@@ -30,8 +30,8 @@
                     </li>
                 </ol>
             </div>
-            <div class="col-md-2 set">
-                <div class="right">
+            <div class="col-md-2 font-line">
+                <div class="right-align">
                     <img :src="'images/'+match.villain.avatar" height="120px" width="120px" style="border-radius: 50%;"><br>
                     {{match.villain.actor}}
                 </div>
@@ -136,7 +136,7 @@ export default {
                 }
             } else {
                 this.comment({
-                    view: '<font color="green"><i>' +this.villainName  + '</i>' +' win the toss</font>',
+                    view: '<font color="green"><i>' +this.villainName  + '</i>' +' won the toss</font>',
                     heroLife: this.heroHealth,
                     villainLife: this.villainHealth
                 });

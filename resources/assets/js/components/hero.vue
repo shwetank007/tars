@@ -27,7 +27,9 @@
 								</div>
 								<div class="form-group center" :class="{'has-error': errors.has('avatar')}">
 									<div class="fileinput fileinput-new" data-provides="fileinput">
-										<div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 120px; height: 120px;border-radius: 50%;"></div>
+										<div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 120px; height: 120px;border-radius: 50%;">
+											<img src="default.gif">
+										</div>
 										<div>
 											<span class="btn btn-default btn-file">
 												<span class="fileinput-new">Upload Avatar</span>
