@@ -1,8 +1,3 @@
-<style>
-	.center {
-		text-align: center;
-	}
-</style>
 <template>
 	<div class="center page-wrap">
 		<h1>Welcome to T.A.R.S.</h1>

@@ -15,6 +15,20 @@ class Powers extends Migration
     {
         Schema::create('powers', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('hero_id')
+                ->nullable();
+            $table->foreign('hero_id')
+                ->references('id')
+                ->on('heroes')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->unsignedInteger('villain_id')
+                ->nullable();
+            $table->foreign('villain_id')
+                ->references('id')
+                ->on('villains')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->string('power_name');
             $table->string('damage');
             $table->timestamps();

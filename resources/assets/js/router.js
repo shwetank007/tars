@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Hero from './components/hero.vue';
-import Villain from './components/villain.vue';
-import Match from './components/match.vue';
 import Login from './components/login.vue';
-import Fight from './components/fight.vue';
+import Hero from './components/hero/hero.vue';
+import AddHero from './components/hero/addHero.vue';
+import Villain from './components/villain/villain.vue';
+import Match from './components/match/match.vue';
+import Fight from './components/match/fight.vue';
 import VueResource from 'vue-resource';
 
 Vue.use(VueResource);
@@ -15,7 +16,8 @@ var routes = [
 	{path: '/hero', name: 'hero', component: Hero},
 	{path: '/villain', name: 'villain', component: Villain},
 	{path: '/match', name: 'match', component: Match},
-	{path: '/fight/:id', name: 'fight', component: Fight}
+	{path: '/fight/:id', name: 'fight', component: Fight},
+	{path: '/addHero', name: 'addHero', component: AddHero}
 ];
 
 const router = new VueRouter({

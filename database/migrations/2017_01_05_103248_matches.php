@@ -15,13 +15,15 @@ class Matches extends Migration
     {
         Schema::create('matches', function (Blueprint $table){
             $table->increments('id');
-            $table->unsignedInteger('hero_id')->nullable();
+            $table->unsignedInteger('hero_id')
+                ->nullable();
             $table->foreign('hero_id')
                 ->references('id')
                 ->on('heroes')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->unsignedInteger('villain_id')->nullable();
+            $table->unsignedInteger('villain_id')
+                ->nullable();
             $table->foreign('villain_id')
                 ->references('id')
                 ->on('villains')

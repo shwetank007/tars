@@ -10,12 +10,13 @@
 <template>
 	<div class="page-wrap">
 		<div class="center">
-			<button @click="seen = !seen">{{(seen)?'Cancel':'Add Hero' }}</button>
+			<!--<button @click="seen = !seen" type="button" class="btn btn-success">{{(seen)?'Cancel':'Add Hero' }}</button>-->
+			<router-link to="/addHero"><button type="button" class="btn btn-success">Add Hero</button></router-link>
 		</div>
-		<div v-if="seen">
-			<div class="container">
-				<div class="row centered-form">
-					<div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+		<!--<div v-if="seen">-->
+			<!--<div class="container">-->
+				<!--<div class="row centered-form">-->
+					<!--<div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">-->
 						<form enctype="multipart/form-data" method="post">
 						<div class="panel panel-default">
 							<div class="panel-heading">
@@ -72,14 +73,31 @@
 									<span v-show="errors.has('rival')" class="help-block">{{ errors.first('rival') }}</span>
 								</div>
 
+								<div class="form-group" :class="{'has-error': errors.has('powerName')}">
+									<input v-model="powerName" v-validate data-vv-rules="required" data-vv-name="powerName" type="text"
+										   class="form-control input-sm" placeholder="Power Name">
+									<span v-show="errors.has('powerName')" class="help-block">{{ errors.first('powerName') }}</span>
+								</div>
+
+								<div class="form-group" :class="{'has-error': errors.has('powerDamage')}">
+									<input v-model="powerDamage" v-validate data-vv-rules="required" data-vv-name="powerDamage" type="text"
+										   class="form-control input-sm" placeholder="Power Damage">
+									<span v-show="errors.has('powerDamage')" class="help-block">{{ errors.first('powerDamage') }}</span>
+								</div>
+
+								<div class="form-group center">
+									<button @click="submitPower" v-bind:disabled="!checkPower" type="button" class="btn btn-success">Submit Power</button>
+									<span>Power: {{counter}} </span>
+								</div>
+
 								<button @click.prevent="add" v-bind:disabled="!isValid" class="btn btn-info btn-block">Submit</button>
 							</div>
 						</div>
 						</form>
-					</div>
-				</div>
-			</div>
-		</div>
+					<!--</div>-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
 		<div class="container">
 			<div class="col-md-12 hv-look" v-for="(hero,index) in heroes">
 				<div class="col-md-4 center">
@@ -128,6 +146,10 @@ export default {
 			partner: '',
 			rival: '',
 			heroes:[],
+			powerName: '',
+			powerDamage: '',
+			weapons:[],
+			counter: 0,
 			errorMessage: false,
 		}
 	},
@@ -150,7 +172,7 @@ export default {
 			});
 		},
 		add: function () {
-			var form = new FormData;
+			let form = new FormData;
 			form.append('avatar',this.avatar);
 			form.append('actor',this.actor);
 			form.append('name',this.name);
@@ -160,19 +182,19 @@ export default {
 			form.append('detail', '0');
 			this.$http.post('api/hero', form)
 			.then((response) => {
-				var all = JSON.parse(response.body);
-				var hero = {
-					avatar: all.avatar,
-					actor: this.actor,
-					name: this.name,
-					weakness: this.weakness,
-					partner: this.partner,
-					rival: this.rival,
-					detail: false
-				};
-				this.heroes.push(hero);
-				this.actor = this.name = this.weakness = this.partner = this.rival = this.avatar = '';
-				this.seen = false;
+//				var all = JSON.parse(response.body);
+//				var hero = {
+//					avatar: all.avatar,
+//					actor: this.actor,
+//					name: this.name,
+//					weakness: this.weakness,
+//					partner: this.partner,
+//					rival: this.rival,
+//					detail: false
+//				};
+//				this.heroes.push(hero);
+//				this.actor = this.name = this.weakness = this.partner = this.rival = this.avatar = '';
+//				this.seen = false;
 			})
 			.catch((error) => {
 				console.debug(error);
@@ -187,11 +209,23 @@ export default {
 			.catch((error) => {
 				console.debug(error);
 			});
+		},
+		submitPower : function () {
+			this.weapons.push({
+				name: this.powerName,
+				damage: this.powerDamage
+			});
+
+			this.powerName = this.powerDamage = '';
+			this.counter += 1;
 		}
 	},
 	computed: {
 		isValid: function () {
 			return this.actor != '' && this.name != '' && this.partner != '' && this.rival != '' && this.weakness != '' && this.avatar != ''
+		},
+		checkPower : function () {
+			return this.powerName != '' && this.powerDamage != ''
 		}
 	}
 }
