@@ -21,7 +21,7 @@ class HeroController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->power_name);
+        dd($request->powername);
         DB::beginTransaction();
             $hero = new Hero();
             $hero->actor    = $request->get('actor');

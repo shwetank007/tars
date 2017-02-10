@@ -3,6 +3,27 @@
     background: white;
     padding: 30px;
 }
+
+.power-table {
+    text-align: center;
+    margin-top: 40px;
+    margin-right: 58px;
+    margin-bottom: 40px;
+    background: white;
+}
+
+.power-border {
+    border: 1px solid black;
+}
+
+.table-start {
+    margin-top: 20px;
+}
+
+.submit-button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 </style>
 <template>
     <div class="page-wrap">
@@ -25,58 +46,172 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" :class="{'has-error': errors.has('actor')}">
-                    <input v-model="actor" v-validate data-vv-rules="required" data-vv-name="actor" type="text"
-                           class="form-control input-sm" placeholder="Superhero Name">
-                    <span v-show="errors.has('actor')" class="help-block">{{ errors.first('actor') }}</span>
+                <div class="row">
+                    <div class="col-sm-3 col-sm-offset-3">
+                        <div class="form-group" :class="{'has-error': errors.has('actor')}">
+                            <input v-model="actor" v-validate data-vv-rules="required" data-vv-name="actor" type="text"
+                                   class="form-control input-sm" placeholder="Superhero Name">
+                            <span v-show="errors.has('actor')" class="help-block">{{ errors.first('actor') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group" :class="{'has-error': errors.has('name')}">
+                            <input v-model="name" v-validate data-vv-rules="required" data-vv-name="name" type="text"
+                                   class="form-control input-sm" placeholder="Superhero Alias">
+                            <span v-show="errors.has('name')" class="help-block">{{ errors.first('name') }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-sm-offset-3">
+                        <div class="form-group" :class="{'has-error': errors.has('partner')}">
+                            <input v-model="partner" v-validate data-vv-rules="required" data-vv-name="partner" type="text"
+                                   class="form-control input-sm" placeholder="Partner Name">
+                            <span v-show="errors.has('partner')" class="help-block">{{ errors.first('partner') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group" :class="{'has-error': errors.has('rival')}">
+                            <input v-model="rival" v-validate data-vv-rules="required" data-vv-name="rival" type="text"
+                                   class="form-control input-sm" placeholder="Arch Rival Name">
+                            <span v-show="errors.has('rival')" class="help-block">{{ errors.first('rival') }}</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group" :class="{'has-error': errors.has('name')}">
-                    <input v-model="name" v-validate data-vv-rules="required" data-vv-name="name" type="text"
-                           class="form-control input-sm" placeholder="Superhero Alias">
-                    <span v-show="errors.has('name')" class="help-block">{{ errors.first('name') }}</span>
+                <!--Add Power Form-->
+                <div v-if="showAddPower" class="row">
+                    <div class="col-sm-3 col-sm-offset-3">
+                        <div class="form-group" :class="{'has-error': errors.has('powerName')}">
+                            <input v-model="powerName" v-validate data-vv-rules="required" data-vv-name="powerName" type="text"
+                                   class="form-control input-sm" placeholder="Power Name">
+                            <span v-show="errors.has('powerName')" class="help-block">{{ errors.first('powerName') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group" :class="{'has-error': errors.has('powerDamage')}">
+                            <input v-model="powerDamage" v-validate data-vv-rules="required" data-vv-name="powerDamage" type="text"
+                                   class="form-control input-sm" placeholder="Power Damage">
+                            <span v-show="errors.has('powerDamage')" class="help-block">{{ errors.first('powerDamage') }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-offset-4 center">
+                            <button @click="submitPower" v-bind:disabled="!checkPower" class="btn btn-primary">Submit Power</button>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="form-group" :class="{'has-error': errors.has('weakness')}">
-                    <input v-model="weakness" v-validate data-vv-rules="required" data-vv-name="weakness" type="text"
-                           class="form-control input-sm" placeholder="Weakness">
-                    <span v-show="errors.has('weakness')" class="help-block">{{ errors.first('weakness') }}</span>
+                <!--End-->
+                <div class="row">
+                    <div class="col-sm-4 col-sm-offset-4 center">
+                        <button @click="addPower" v-if="!this.showAddPower" type="submit" class="btn btn-primary">Add Power</button>
+                    </div>
                 </div>
-
-                <div class="form-group" :class="{'has-error': errors.has('partner')}">
-                    <input v-model="partner" v-validate data-vv-rules="required" data-vv-name="partner" type="text"
-                           class="form-control input-sm" placeholder="Partner Name">
-                    <span v-show="errors.has('partner')" class="help-block">{{ errors.first('partner') }}</span>
-                </div>
-
-                <div class="form-group" :class="{'has-error': errors.has('rival')}">
-                    <input v-model="rival" v-validate data-vv-rules="required" data-vv-name="rival" type="text"
-                           class="form-control input-sm" placeholder="Arch Rival Name">
-                    <span v-show="errors.has('rival')" class="help-block">{{ errors.first('rival') }}</span>
-                </div>
-
-                <div class="form-group" :class="{'has-error': errors.has('powerName')}">
-                    <input v-model="powerName" v-validate data-vv-rules="required" data-vv-name="powerName" type="text"
-                           class="form-control input-sm" placeholder="Power Name">
-                    <span v-show="errors.has('powerName')" class="help-block">{{ errors.first('powerName') }}</span>
-                </div>
-
-                <div class="form-group" :class="{'has-error': errors.has('powerDamage')}">
-                    <input v-model="powerDamage" v-validate data-vv-rules="required" data-vv-name="powerDamage" type="text"
-                           class="form-control input-sm" placeholder="Power Damage">
-                    <span v-show="errors.has('powerDamage')" class="help-block">{{ errors.first('powerDamage') }}</span>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+        </div>
+        <div class="container power-table" v-show="seen">
+            <div class="row table-start">
+                <div class="col-sm-3 col-sm-offset-3 power-border">
+                    Power Name
+                </div>
+                <div class="col-sm-3 power-border">
+                    Power Damage
+                </div>
+            </div>
+            <div class="row" v-for="power in powers">
+                <div class="col-sm-3 col-sm-offset-3 power-border">
+                    {{power.name}}
+                </div>
+                <div class="col-sm-3 power-border">
+                    {{power.damage}}
+                </div>
+            </div>
+            <div class="row submit-button">
+                <div class="col-sm-4 col-sm-offset-4 center">
+                    <button @click.prevent="add" v-bind:disabled="!isValid" type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 <script>
 export default {
-//    data: function () {
-//    },
-//    methods:{
-//
-//    }
+    data: function () {
+        return{
+            avatar:'',
+            actor: '',
+            name: '',
+            partner: '',
+            rival: '',
+            powerName: '',
+            powerDamage: 0,
+            powers:[],
+            showAddPower: false,
+            weaponName:[],
+            weaponDamage:[],
+            seen: false,
+        }
+    },
+    name: 'add-hero',
+    methods:{
+
+        upload: function (e) {
+            this.avatar = e.target.files[0] || e.dataTransfer.files[0];
+        },
+
+        add: function () {
+            let form = new FormData;
+            form.append('avatar',this.avatar);
+            form.append('actor',this.actor);
+            form.append('name',this.name);
+            form.append('partner',this.partner);
+            form.append('rival',this.rival);
+//            form.append('power',this.powers);
+            form.append('detail', '0');
+            let i;
+            for(i=0;i<this.powers.length;i++) {
+                this.weaponName.push(this.powers[i]);
+//                this.weaponDamage.push(this.powers[i].damage);
+            }
+            form.append('powername',this.weaponName);
+
+            this.$http.post('api/hero', form)
+                .then((response) => {
+//                    this.actor = this.name = this.weakness = this.partner = this.rival = this.avatar = '';
+                })
+//                .catch((error) => {
+//                    console.debug(error);
+//                    this.errorMessage = true;
+//                });
+        },
+
+        clearPowerForm: function () {
+            this.powerName = '';
+            this.powerDamage = 0 ;
+        },
+
+        addPower: function () {
+            this.clearPowerForm();
+            this.showAddPower = true;
+        },
+
+        submitPower: function () {
+            this.powers.push({
+                name: this.powerName,
+                damage: this.powerDamage
+            });
+            this.clearPowerForm();
+            this.showAddPower = false;
+            this.seen = true;
+        }
+    },
+    computed:{
+        isValid: function () {
+            return this.actor != '' && this.name != '' && this.partner != '' && this.rival != ''
+        },
+        checkPower: function () {
+            return this.powerName != '' && this.powerDamage != ''
+        }
+    }
 }
 </script>
