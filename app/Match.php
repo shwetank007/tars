@@ -19,5 +19,4 @@ class Match extends Model
     {
         return $this->hasOne(Villain::class, 'id', 'villain_id');
     }
-
 }

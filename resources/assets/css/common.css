@@ -65,3 +65,28 @@ div.vertical-line{ /*Vertical Line to show Partition*/
     float: left;
     text-align: center;
 }
+.background {
+    background: white;
+    padding: 30px;
+}
+
+.power-table {
+    text-align: center;
+    margin-top: 40px;
+    margin-right: 58px;
+    margin-bottom: 40px;
+    background: white;
+}
+
+.power-border {
+    border: 1px solid black;
+}
+
+.table-start {
+    margin-top: 20px;
+}
+
+.submit-button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

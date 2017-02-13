@@ -23,14 +23,14 @@
                     <div class="col-sm-3 col-sm-offset-3">
                         <div class="form-group" :class="{'has-error': errors.has('actor')}">
                             <input v-model="actor" v-validate data-vv-rules="required" data-vv-name="actor" type="text"
-                                   class="form-control input-sm" placeholder="Superhero Name">
+                                   class="form-control input-sm" placeholder="Villain Name">
                             <span v-show="errors.has('actor')" class="help-block">{{ errors.first('actor') }}</span>
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group" :class="{'has-error': errors.has('name')}">
                             <input v-model="name" v-validate data-vv-rules="required" data-vv-name="name" type="text"
-                                   class="form-control input-sm" placeholder="Superhero Alias">
+                                   class="form-control input-sm" placeholder="Villain Alias">
                             <span v-show="errors.has('name')" class="help-block">{{ errors.first('name') }}</span>
                         </div>
                     </div>
@@ -108,81 +108,81 @@
     </div>
 </template>
 <script>
-export default {
-    data: function () {
-        return{
-            avatar:'',
-            actor: '',
-            name: '',
-            partner: '',
-            rival: '',
-            powerName: '',
-            powerDamage: 0,
-            powers:[],
-            showAddPower: false,
-            weaponName:[],
-            weaponDamage:[],
-            seen: false,
-        }
-    },
-    name: 'add-hero',
-    methods:{
-
-        upload: function (e) {
-            this.avatar = e.target.files[0] || e.dataTransfer.files[0];
+    export default {
+        data: function () {
+            return{
+                avatar:'',
+                actor: '',
+                name: '',
+                partner: '',
+                rival: '',
+                powerName: '',
+                powerDamage: 0,
+                powers:[],
+                showAddPower: false,
+                weaponName:[],
+                weaponDamage:[],
+                seen: false,
+            }
         },
+        name: 'add-vill',
+        methods:{
 
-        add: function () {
-            let form = new FormData;
-            form.append('avatar',this.avatar);
-            let hero = {
-                actor: this.actor,
-                name: this.name,
-                rival: this.rival,
-                partner: this.partner,
-                power: this.powers,
-                detail: 0,
-            };
-            form.append('hero',JSON.stringify(hero));
-            this.$http.post('api/hero', form)
-                .then((response) => {
-                    this.actor = this.name = this.partner = this.rival = this.avatar = '';
-                    this.powers=[];
-                    this.$router.push('/hero');
-                })
-                .catch((error) => {
-                    console.debug(error);
-                    this.errorMessage = true;
+            upload: function (e) {
+                this.avatar = e.target.files[0] || e.dataTransfer.files[0];
+            },
+
+            add: function () {
+                let form = new FormData;
+                form.append('avatar',this.avatar);
+                let villain = {
+                    actor: this.actor,
+                    name: this.name,
+                    rival: this.rival,
+                    partner: this.partner,
+                    power: this.powers,
+                    detail: 0,
+                };
+                form.append('villain',JSON.stringify(villain));
+                this.$http.post('api/villain', form)
+                        .then((response) => {
+                            this.actor = this.name = this.partner = this.rival = this.avatar = '';
+                            this.powers=[];
+                            this.$router.push('/villain');
+                        })
+                        .catch((error) => {
+                            console.debug(error);
+                            this.errorMessage = true;
+                        });
+            },
+
+            clearPowerForm: function () {
+                this.powerName = '';
+                this.powerDamage = 0 ;
+            },
+
+            addPower: function () {
+                this.clearPowerForm();
+                this.showAddPower = true;
+            },
+
+            submitPower: function () {
+                this.powers.push({
+                    name: this.powerName,
+                    damage: this.powerDamage
                 });
+                this.clearPowerForm();
+                this.showAddPower = false;
+                this.seen = true;
+            }
         },
-
-        clearPowerForm: function () {
-            this.powerName = '';
-            this.powerDamage = 0 ;
-        },
-
-        addPower: function () {
-            this.clearPowerForm();
-            this.showAddPower = true;
-        },
-
-        submitPower: function () {
-            this.powers.push({
-                name: this.powerName,
-                damage: this.powerDamage
-            });
-            this.clearPowerForm();
-            this.showAddPower = false;
-            this.seen = true;
-        }
-    },
-    computed:{
-        isValid: function () {
-            return this.actor != '' && this.name != '' && this.partner != '' && this.rival != ''
-        },
-        checkPower: function () {
-            return this.powerName != '' && this.powerDamage != ''
+        computed:{
+            isValid: function () {
+                return this.actor != '' && this.name != '' && this.partner != '' && this.rival != ''
+            },
+            checkPower: function () {
+                return this.powerName != '' && this.powerDamage != ''
+            }
         }
     }
-}
 </script>

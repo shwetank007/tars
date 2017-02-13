@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Control;
 
 use App\Hero;
 use App\Http\Controllers\Controller;
+use App\Power;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,15 +22,15 @@ class HeroController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->powername);
+        $data = json_decode($request->hero);
+
         DB::beginTransaction();
             $hero = new Hero();
-            $hero->actor    = $request->get('actor');
-            $hero->name     = $request->get('name');
-            $hero->weakness = $request->get('weakness');
-            $hero->partner  = $request->get('partner');
-            $hero->rival    = $request->get('rival');
-            $hero->detail   = $request->get('detail');
+            $hero->actor    = $data->actor;
+            $hero->name     = $data->name;
+            $hero->partner  = $data->partner;
+            $hero->rival    = $data->rival;
+            $hero->detail   = $data->detail;
             if ($request->hasFile('avatar')) {
                 $file = Input::file('avatar');
                 $timestamp = str_replace([' ', ':'], '-', Carbon::now()->toDateTimeString());
@@ -39,8 +40,16 @@ class HeroController extends Controller
             }
             $hero->save();
 
+            for($i = 0; $i < count($data->power); $i++) {
+                $power = new Power();
+                $power->hero_id     = $hero->id;
+                $power->power_name  = $data->power[$i]->name;
+                $power->damage      = $data->power[$i]->damage;
+                $power->save();
+            }
         DB::commit();
-        return response()->json(['status'=>'success','avatar' => $hero->avatar],200);
+//        ,'avatar' => $hero->avatar]
+        return response()->json(['status'=>'success'], 200);
     }
 
     public function destroy($id)

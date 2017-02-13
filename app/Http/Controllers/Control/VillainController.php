@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Control;
 
 use App\Villain;
+use App\Power;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,14 +22,16 @@ class VillainController extends Controller
 
     public function store(Request $request)
     {
+        $data = json_decode($request->villain);
+
         DB::beginTransaction();
 
             $villain = new Villain();
-            $villain->actor    = $request->get('actor');
-            $villain->name     = $request->get('name');
-            $villain->partner  = $request->get('partner');
-            $villain->rival    = $request->get('rival');
-            $villain->detail   = $request->get('detail');
+            $villain->actor    = $data->actor;
+            $villain->name     = $data->name;
+            $villain->partner  = $data->partner;
+            $villain->rival    = $data->rival;
+            $villain->detail   = $data->detail;
             if ($request->hasFile('avatar')) {
                 $file = Input::file('avatar');
                 $timestamp = str_replace([' ', ':'], '-', Carbon::now()->toDateTimeString());
@@ -38,9 +41,16 @@ class VillainController extends Controller
             }
             $villain->save();
 
+        for($i = 0; $i < count($data->power); $i++) {
+                $power = new Power();
+                $power->villain_id     = $villain->id;
+                $power->power_name  = $data->power[$i]->name;
+                $power->damage      = $data->power[$i]->damage;
+                $power->save();
+            }
         DB::commit();
 
-        return response()->json(['status'=>'success','avatar' => $villain->avatar],200);
+        return response()->json(['status'=>'success'],200);
     }
 
     public function destroy($id)

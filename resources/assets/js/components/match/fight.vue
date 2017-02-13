@@ -44,7 +44,8 @@ export default {
     data: function() {
         return {
             match:'',
-            powers:'',
+            powerHero:'',
+            powerVillain:'',
             chance: 0,
             villainHealth: 100,
             heroHealth: 100,
@@ -71,7 +72,8 @@ export default {
             .then((response) => {
                 var all = JSON.parse(response.body);
                 this.match = all.fixture;
-                this.powers = all.power;
+                this.powerHero = all.powerHero;
+                this.powerVillain = all.powerVillain;
                 var hero = this.match.hero.actor;
                 var villain = this.match.villain.actor;
                 this.start(hero, villain);
@@ -177,13 +179,19 @@ export default {
             }
         },
         attack : function () {
-            var max = this.powers.length;//Total number of powers present
-            var min = 0;
+//            var max = this.powers.length;//Total number of powers present
+//            var min = 0;
+            let max,min,weaponChoice;
             this.defence = Math.floor(Math.random() * 2);
-            var weaponChoice = Math.floor(Math.random() * (max - min) + min);
-            this.weaponDamage = this.powers[weaponChoice].damage;
-            this.weaponName = this.powers[weaponChoice].power_name;
+//            var weaponChoice = Math.floor(Math.random() * (max - min) + min);
+//            this.weaponDamage = this.powers[weaponChoice].damage;
+//            this.weaponName = this.powers[weaponChoice].power_name;
             if (this.chance == 0) {
+                max = this.powerHero.length;
+                min = 0;
+                weaponChoice = Math.floor(Math.random() * (max - min) + min);
+                this.weaponDamage = this.powerHero[weaponChoice].damage;
+                this.weaponName = this.powerHero[weaponChoice].power_name;
                 if (this.defence == 0) {
                     this.shield(this.defence = 0);//Shield is on for Villain
                 } else {
@@ -195,6 +203,11 @@ export default {
                     });
                 }
             } else {
+                max = this.powerVillain.length;
+                min = 0;
+                weaponChoice = Math.floor(Math.random() * (max - min) + min);
+                this.weaponDamage = this.powerVillain[weaponChoice].damage;
+                this.weaponName = this.powerVillain[weaponChoice].power_name;
                 if (this.defence == 0) {
                     this.shield(this.defence = 1);//Shield is on for Hero
                 } else {

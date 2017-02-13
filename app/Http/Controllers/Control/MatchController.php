@@ -24,10 +24,11 @@ class MatchController extends Controller
 
     public function show($id)
     {
-        $match = Match::with('hero','villain')->find($id);
-        $power = Power::all();
+        $match          = Match::with('hero','villain')->find($id);
+        $powerHero      = Power::with('hero')->where('hero_id', $match->hero->id)->get();
+        $powerVillain   = Power::with('villain')->where('villain_id', $match->villain->id)->get();
 
-        return response()->json(['fixture'=>$match,'power'=>$power]);
+        return response()->json(['fixture'=>$match,'powerHero'=>$powerHero,'powerVillain'=>$powerVillain]);
     }
 
    public function store(Request $request)
