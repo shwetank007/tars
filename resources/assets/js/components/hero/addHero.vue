@@ -100,7 +100,7 @@
             </div>
             <div class="row submit-button">
                 <div class="col-sm-4 col-sm-offset-4 center">
-                    <button @click.prevent="add" v-bind:disabled="!isValid" type="submit" class="btn btn-primary">Submit</button>
+                    <button @click.prevent="addHero" v-bind:disabled="!isValid" type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </div>
@@ -134,7 +134,7 @@ export default {
             this.avatar = e.target.files[0] || e.dataTransfer.files[0];
         },
 
-        add () {
+        addHero () {
             let form = new FormData;
             form.append('avatar',this.avatar);
             let hero = {

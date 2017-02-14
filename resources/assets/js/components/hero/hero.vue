@@ -40,7 +40,7 @@
 				<div class="col-md-2 center hv-down">
 					<div v-bind:class="[hero.detail ? 'distance' : '']">
 						<button @click="hero.detail = !hero.detail" style="position: inherit;">{{(hero.detail)?'Hide Detail':'Detail' }}</button>
-						<button @click="remove(index,hero.id)">Delete</button>
+						<button @click="removeHero(index,hero.id)">Delete</button>
 					</div>
 				</div>
 			</div>
@@ -78,7 +78,7 @@ export default {
 			});
 		},
 
-		remove (item,id) {
+		removeHero (item,id) {
 			this.$http.delete('api/hero/'+id)
 			.then((response) => {
 				this.heroes.splice(item,1);

@@ -88,7 +88,7 @@
                                         <datepicker :disabled="state.disabled" placeholder="Match Date" v-model="date" v-validate data-vv-rules="required" data-vv-name="date"></datepicker>
 										<span v-show="errors.has('date')" class="help-block">{{ errors.first('date') }}</span>
 									</div>
-                                    <button @click.prevent="add" v-bind:disabled="!isValid" class="btn btn-info btn-block">Submit</button>
+                                    <button @click.prevent="addMatch" v-bind:disabled="!isValid" class="btn btn-info btn-block">Submit</button>
 								</div>
 							</div>
 						</div>
@@ -109,7 +109,7 @@
 				</div>
 				<div class="button-reset">
 					<button @click="match.detail = !match.detail">{{(match.detail)?'Hide Detail':'Detail' }}</button>
-					<button @click="remove(index,match.id)">Delete</button>
+					<button @click="removeMatch(index,match.id)">Delete</button>
 					<router-link :to="{ name: 'fight', params: { id: match.id }}"><button>Start Match</button></router-link>
 					<!--<button v-on:click="start(match.hero.actor, match.villain.actor)">Start Match</button>-->
 				</div>
@@ -180,7 +180,7 @@ export default {
 			});
         },
 
-		add () {
+		addMatch () {
 			let match = {
 				hero_id: this.hero.id,
 				villain_id: this.antiHero.id,
@@ -214,7 +214,7 @@ export default {
 			this.seen = false;
 		},
 
-		remove (item,id) {
+		removeMatch (item,id) {
 			this.$http.delete('api/match/'+id)
 			.then((response) => {
 				this.matches.splice(item,1);

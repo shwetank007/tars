@@ -31,7 +31,7 @@
 				<div class="col-md-2 center hv-down">
 					<div v-bind:class="[villain.detail ? 'distance' : '']">
 						<button @click="villain.detail = !villain.detail" style="position: inherit;">{{(villain.detail)?'Hide Detail':'Detail' }}</button>
-						<button @click="remove(index,villain.id)">Delete</button>
+						<button @click="removeVillain(index,villain.id)">Delete</button>
 					</div>
 				</div>
 			</div>
@@ -61,6 +61,7 @@ export default {
 	},
 
 	methods: {
+
 		fetch () {
 			let that = this;
 			this.$http.get('api/villain')
@@ -71,7 +72,8 @@ export default {
 				console.debug(error);
 			});
 		},
-		remove (item,id) {
+
+		removeVillain (item,id) {
 			this.$http.delete('api/villain/'+id)
 			.then((response) => {
 				this.antiHero.splice(item,1);
