@@ -210,7 +210,7 @@ export default {
 			.catch((error) => {
 				console.debug(error);
 			});
-			this.superhero = this.villain = this.cause = this.place = this.date = '';
+			this.hero = this.antiHero = this.cause = this.place = this.date = '';
 			this.seen = false;
 		},
 
