@@ -37,6 +37,8 @@ class HeroController extends Controller
                 $name = $timestamp . '-' . $file->getClientOriginalName();
                 $hero->avatar = $name;
                 $file->move(public_path() . '/images/', $name);
+            } else {
+                $hero->avatar = 'default.gif';
             }
             $hero->save();
 

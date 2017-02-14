@@ -2,7 +2,7 @@
     <div class="page-wrap">
         <div class="container background">
             <form>
-                <div class="form-group center" :class="{'has-error': errors.has('avatar')}">
+                <div class="form-group center">
                     <div class="fileinput fileinput-new" data-provides="fileinput">
                         <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 120px; height: 120px;border-radius: 50%;">
                             <img src="default.gif">
@@ -11,9 +11,8 @@
                             <span class="btn btn-default btn-file">
                                 <span class="fileinput-new">Upload Avatar</span>
                                 <span class="fileinput-exists">Change</span>
-                                <input type="file" v-on:change="upload" class="form-control input-sm"
-                                       v-validate data-vv-rules="required" data-vv-name="avatar">
-                            <span v-show="errors.has('avatar')" class="help-block">{{ errors.first('avatar') }}</span>
+                                <input type="file" class="form-control input-sm" v-on:change="upload"
+                                       data-vv-name="avatar">
                             </span>
                             <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
                         </div>

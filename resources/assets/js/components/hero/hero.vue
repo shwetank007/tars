@@ -32,7 +32,6 @@
 						</div>
 						<div>
 							<b>Name        :</b> {{ hero.name }}.<br>
-							<b>Weakness    :</b> {{ hero.weakness }}.<br>
 							<b>Partner     :</b> {{ hero.partner }}.<br>
 							<b>Rival       :</b> {{ hero.rival }}.
 						</div>

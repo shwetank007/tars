@@ -38,6 +38,8 @@ class VillainController extends Controller
                 $name = $timestamp . '-' . $file->getClientOriginalName();
                 $villain->avatar = $name;
                 $file->move(public_path() . '/images/', $name);
+            } else {
+                $villain->avatar = 'default.gif';
             }
             $villain->save();
 
