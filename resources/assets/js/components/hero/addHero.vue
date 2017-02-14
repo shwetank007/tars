@@ -83,24 +83,31 @@
         </div>
         <div class="container power-table" v-show="seen">
             <div class="row table-start">
-                <div class="col-sm-3 col-sm-offset-3 power-border">
+                <div class="col-sm-2 col-sm-offset-3 power-border">
                     Power Name
                 </div>
-                <div class="col-sm-3 power-border">
+                <div class="col-sm-2 power-border">
                     Power Damage
                 </div>
+                <div class="col-sm-2 power-border">
+                    Actions
+                </div>
             </div>
-            <div class="row" v-for="power in powers">
-                <div class="col-sm-3 col-sm-offset-3 power-border">
+            <div class="row" v-for="(power,index) in powers">
+                <div class="col-sm-2 col-sm-offset-3 power-border">
                     {{power.name}}
                 </div>
-                <div class="col-sm-3 power-border">
+                <div class="col-sm-2 power-border">
                     {{power.damage}}
+                </div>
+                <div class="col-sm-2 power-border">
+                    <button>Edit</button>
+                    <button @click="deletePower(index)">Delete</button>
                 </div>
             </div>
             <div class="row submit-button">
                 <div class="col-sm-4 col-sm-offset-4 center">
-                    <button @click.prevent="addHero" v-bind:disabled="!isValid" type="submit" class="btn btn-primary">Submit</button>
+                    <button @click.prevent="addHero(index)" v-bind:disabled="!isValid" type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </div>
@@ -176,6 +183,14 @@ export default {
             this.clearPowerForm();
             this.showAddPower = false;
             this.seen = true;
+        },
+
+        deletePower (item) {
+            this.powers.splice(item,1);
+
+            if(this.powers.length == 0) {
+                this.seen = false;
+            }
         }
     },
     computed:{
