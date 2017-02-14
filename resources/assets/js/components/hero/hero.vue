@@ -49,7 +49,8 @@
 </template>
 <script>
 export default {
-	data: function () {
+
+	data () {
 		return {
 			heroes:[],
 			powerName: '',
@@ -58,12 +59,15 @@ export default {
 			counter: 0,
 		}
 	},
+
 	name: 'hero',
+
 	created () {
 		this.fetch();
 	},
 	methods: {
-		fetch: function() {
+
+		fetch () {
 			let that = this;
 			this.$http.get('api/hero')
 			.then((response)=> {
@@ -73,7 +77,8 @@ export default {
 				console.debug(error);
 			});
 		},
-		remove: function (item,id) {
+
+		remove (item,id) {
 			this.$http.delete('api/hero/'+id)
 			.then((response) => {
 				this.heroes.splice(item,1);

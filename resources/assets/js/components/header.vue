@@ -32,7 +32,7 @@ require('bootstrap-sass');
 
 export default {
 methods: {
-	logout:function () {
+	logout () {
 		this.$http.get('logout')
 				.then((response)=>{
 					window.location.href = "/tars/public/";

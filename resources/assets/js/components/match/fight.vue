@@ -41,7 +41,8 @@
 </template>
 <script>
 export default {
-    data: function() {
+
+    data () {
         return {
             match:'',
             powerHero:'',
@@ -61,28 +62,33 @@ export default {
             matchComplete: false
         }
     },
+
     name: 'fight',
+
     created() {
         this.fetch();
     },
+
     methods: {
-        fetch : function () {
-            var id = this.$route.params.id;
+
+        fetch () {
+            let id = this.$route.params.id;
             this.$http.get('api/match/' + id)
             .then((response) => {
                 var all = JSON.parse(response.body);
                 this.match = all.fixture;
                 this.powerHero = all.powerHero;
                 this.powerVillain = all.powerVillain;
-                var hero = this.match.hero.actor;
-                var villain = this.match.villain.actor;
+                let hero = this.match.hero.actor;
+                let villain = this.match.villain.actor;
                 this.start(hero, villain);
             })
             .catch((error) => {
                console.debug(error);
             });
         },
-        start : function (hero,villain) {
+
+        start (hero,villain) {
             this.heroHealth = 100;
             this.villainHealth = 100;
             this.heroName = hero;
@@ -95,9 +101,10 @@ export default {
             });
             this.toss();
         },
-        toss : function () {
-            var tossWin = Math.floor(Math.random() * 2);
-            var n = 0;
+
+        toss () {
+            let tossWin = Math.floor(Math.random() * 2);
+            let n = 0;
             if(tossWin == 0) {
                 this.comment({
                     view: '<font color="green"><i>' + this.heroName + '</i>' +' won the toss</font>',
@@ -178,14 +185,10 @@ export default {
                 }
             }
         },
-        attack : function () {
-//            var max = this.powers.length;//Total number of powers present
-//            var min = 0;
+
+        attack () {
             let max,min,weaponChoice;
             this.defence = Math.floor(Math.random() * 2);
-//            var weaponChoice = Math.floor(Math.random() * (max - min) + min);
-//            this.weaponDamage = this.powers[weaponChoice].damage;
-//            this.weaponName = this.powers[weaponChoice].power_name;
             if (this.chance == 0) {
                 max = this.powerHero.length;
                 min = 0;
@@ -220,7 +223,8 @@ export default {
                 }
             }
         },
-        shield : function () {
+
+        shield () {
             if(this.defence==0) {
                 this.villainHealth = this.villainHealth - (this.weaponDamage * 0.2);
                 this.comment({
@@ -265,15 +269,18 @@ export default {
                 }
             }
         },
-        clear : function () {
+
+        clear () {
             this.commentary = [];
             this.narration = [];
             return true;
         },
-        comment : function (a) {
-            this.narration.push(a);
+
+        comment (view) {
+            this.narration.push(view);
             return true;
         },
+
         showCommentary() {
             let that =  this;
             if(this.narration.length > 0 ) {

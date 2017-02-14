@@ -108,7 +108,8 @@
 </template>
 <script>
 export default {
-    data: function () {
+
+    data () {
         return{
             avatar:'',
             actor: '',
@@ -124,14 +125,16 @@ export default {
             seen: false,
         }
     },
+
     name: 'add-hero',
+
     methods:{
 
-        upload: function (e) {
+        upload (e) {
             this.avatar = e.target.files[0] || e.dataTransfer.files[0];
         },
 
-        add: function () {
+        add () {
             let form = new FormData;
             form.append('avatar',this.avatar);
             let hero = {
@@ -155,17 +158,17 @@ export default {
                 });
         },
 
-        clearPowerForm: function () {
+        clearPowerForm () {
             this.powerName = '';
             this.powerDamage = 0 ;
         },
 
-        addPower: function () {
+        addPower () {
             this.clearPowerForm();
             this.showAddPower = true;
         },
 
-        submitPower: function () {
+        submitPower () {
             this.powers.push({
                 name: this.powerName,
                 damage: this.powerDamage
@@ -176,10 +179,12 @@ export default {
         }
     },
     computed:{
-        isValid: function () {
+
+        isValid () {
             return this.actor != '' && this.name != '' && this.partner != '' && this.rival != ''
         },
-        checkPower: function () {
+
+        checkPower () {
             return this.powerName != '' && this.powerDamage != ''
         }
     }

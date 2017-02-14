@@ -12,7 +12,7 @@ import VueResource from 'vue-resource';
 Vue.use(VueResource);
 Vue.use(VueRouter);
 
-var routes = [
+let routes = [
 	{path:'/', name:'index', component:Login},
 	{path: '/hero', name: 'hero', component: Hero},
 	{path: '/villain', name: 'villain', component: Villain},

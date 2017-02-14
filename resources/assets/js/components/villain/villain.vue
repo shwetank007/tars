@@ -40,7 +40,8 @@
 </template>
 <script>
 export default {
-	data: function () {
+
+	data () {
 		return {
 			seen: false,
 			avatar:'',
@@ -52,12 +53,15 @@ export default {
 			errorMessage: false
 		}
 	},
+
 	name: 'villain',
-	created() {
+
+	created () {
 		this.fetch();
 	},
+
 	methods: {
-		fetch: function () {
+		fetch () {
 			let that = this;
 			this.$http.get('api/villain')
 			.then((response) => {
@@ -67,7 +71,7 @@ export default {
 				console.debug(error);
 			});
 		},
-		remove: function (item,id) {
+		remove (item,id) {
 			this.$http.delete('api/villain/'+id)
 			.then((response) => {
 				this.antiHero.splice(item,1);

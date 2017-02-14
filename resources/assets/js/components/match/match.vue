@@ -132,9 +132,12 @@
 <script>
 import Datepicker from 'vuejs-datepicker';
 var moment = require('moment');
+
 export default {
-    components: { Datepicker },
-    data: function () {
+
+	components: { Datepicker },
+
+	data () {
         return {
             seen: false,
             superheroes: [],
@@ -154,15 +157,19 @@ export default {
 			}
         }
     },
+
 	name: 'match',
-  	created() {
+
+	created() {
 		this.fetch();
 	},
+
     methods: {
-        fetch: function () {
+
+        fetch () {
 			this.$http.get('api/match')
 			.then((response) => {
-			    var all = JSON.parse(response.body);
+			    let all = JSON.parse(response.body);
                 this.matches = all.fixture;
                 this.superheroes = all.heroes;
                 this.villains = all.antiHeroes;
@@ -172,8 +179,9 @@ export default {
 				console.debug(error);
 			});
         },
-        add : function () {
-			var match = {
+
+		add () {
+			let match = {
 				hero_id: this.hero.id,
 				villain_id: this.antiHero.id,
 				cause: this.cause,
@@ -181,7 +189,7 @@ export default {
                 date: moment(this.date).format('DD/MM/YYYY'),
 				detail: '0'
 			};
-			var fight = {
+			let fight = {
 				hero: {
 					actor: this.hero.name,
 					avatar: this.hero.avatar
@@ -205,7 +213,8 @@ export default {
 			this.superhero = this.villain = this.cause = this.place = this.date = '';
 			this.seen = false;
 		},
-		remove : function (item,id) {
+
+		remove (item,id) {
 			this.$http.delete('api/match/'+id)
 			.then((response) => {
 				this.matches.splice(item,1);
@@ -216,7 +225,8 @@ export default {
 		}
     },
 	computed: {
-		isValid: function () {
+
+		isValid () {
 			return this.superhero != '' && this.villain != '' && this.cause != '' && this.place != '' && this.date != ''
 		}
 	}
