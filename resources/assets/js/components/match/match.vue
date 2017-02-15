@@ -42,7 +42,7 @@
 <template>
 	<div class="page-wrap">
 		<div class="center">
-			<button @click="seen = !seen">{{(seen)?'Cancel':'Add Match' }}</button>
+			<button @click="seen = !seen" class="btn btn-success">{{(seen)?'Cancel':'Add Match' }}</button>
 			<div v-if="seen">
 				<div class="container">
 					<div class="row centered-form">

@@ -105,18 +105,22 @@ export default {
         toss () {
             let tossWin = Math.floor(Math.random() * 2);
             let n = 0;
+
             if(tossWin == 0) {
                 this.comment({
                     view: '<font color="green"><i>' + this.heroName + '</i>' +' won the toss</font>',
                     heroLife: this.heroHealth,
                     villainLife: this.villainHealth
                 });
+
                 while(this.heroHealth >= 0 && this.villainHealth >= 0) {
+
                     if(n % 2 == 0) {
                         this.attack(this.chance = 0);
                     } else {
                         this.attack(this.chance = 1);
                     }
+
                     if(this.heroHealth <= 0) {
                         this.heroHealth = 0;
                         this.comment({
@@ -151,11 +155,13 @@ export default {
                     villainLife: this.villainHealth
                 });
                 while(this.heroHealth >= 0 && this.villainHealth >= 0) {
+
                     if(n % 2 != 0) {
                         this.attack(this.chance = 0);
                     } else {
                         this.attack(this.chance = 1);
                     }
+
                     if(this.heroHealth <= 0	) {
                         this.heroHealth = 0;
                         this.comment({
@@ -165,7 +171,7 @@ export default {
                         });
                         this.showCommentary();
                         break;
-                    }else if(this.villainHealth <= 0) {
+                    } else if(this.villainHealth <= 0) {
                         this.villainHealth = 0;
                         this.comment({
                             view: '<font color="red"><i>' + this.villainName + '</i>'+ ' ' +'Dead</font>',
@@ -195,15 +201,26 @@ export default {
                 weaponChoice = Math.floor(Math.random() * (max - min) + min);
                 this.weaponDamage = this.powerHero[weaponChoice].damage;
                 this.weaponName = this.powerHero[weaponChoice].power_name;
+
                 if (this.defence == 0) {
                     this.shield(this.defence = 0);//Shield is on for Villain
                 } else {
                     this.villainHealth = this.villainHealth - this.weaponDamage;
-                    this.comment({
-                        view: '<i>' + this.heroName + '</i>' + '<font color="red"> hit</font> ' +'<i>'+ this.villainName+'</i>' + ' with ' + '<b>' + this.weaponName +'</b>',
-                        heroLife: this.heroHealth,
-                        villainLife: this.villainHealth
-                    });
+
+                    if(this.villainHealth < 0) {
+                        this.villainHealth = 0;
+                        this.comment({
+                            view: '<i>' + this.heroName + '</i>' + '<font color="red"> hit</font> ' +'<i>'+ this.villainName+'</i>' + ' with ' + '<b>' + this.weaponName +'</b>',
+                            heroLife: this.heroHealth,
+                            villainLife: this.villainHealth
+                        });
+                    } else {
+                        this.comment({
+                            view: '<i>' + this.heroName + '</i>' + '<font color="red"> hit</font> ' +'<i>'+ this.villainName+'</i>' + ' with ' + '<b>' + this.weaponName +'</b>',
+                            heroLife: this.heroHealth,
+                            villainLife: this.villainHealth
+                        });
+                    }
                 }
             } else {
                 max = this.powerVillain.length;
@@ -211,15 +228,25 @@ export default {
                 weaponChoice = Math.floor(Math.random() * (max - min) + min);
                 this.weaponDamage = this.powerVillain[weaponChoice].damage;
                 this.weaponName = this.powerVillain[weaponChoice].power_name;
+
                 if (this.defence == 0) {
                     this.shield(this.defence = 1);//Shield is on for Hero
                 } else {
                     this.heroHealth = this.heroHealth - this.weaponDamage;
-                    this.comment({
-                        view: '<i>' + this.villainName +'</i>' + '<font color="red"> hit</font> ' +'<i>'+ this.heroName+'</i>' + ' with ' + '<b>' + this.weaponName +'</b>',
-                        heroLife: this.heroHealth,
-                        villainLife: this.villainHealth
-                    });
+
+                    if(this.heroHealth < 0) {
+                        this.comment({
+                            view: '<i>' + this.villainName +'</i>' + '<font color="red"> hit</font> ' +'<i>'+ this.heroName+'</i>' + ' with ' + '<b>' + this.weaponName +'</b>',
+                            heroLife: this.heroHealth,
+                            villainLife: this.villainHealth
+                        });
+                    } else {
+                        this.comment({
+                            view: '<i>' + this.villainName +'</i>' + '<font color="red"> hit</font> ' +'<i>'+ this.heroName+'</i>' + ' with ' + '<b>' + this.weaponName +'</b>',
+                            heroLife: this.heroHealth,
+                            villainLife: this.villainHealth
+                        });
+                    }
                 }
             }
         },
@@ -227,19 +254,30 @@ export default {
         shield () {
             if(this.defence==0) {
                 this.villainHealth = this.villainHealth - (this.weaponDamage * 0.2);
-                this.comment({
-                    view: '<i>'+this.heroName+'</i>' + '<font color="red"> hit</font> '+'<i>'+ this.villainName+'</i>' +' with ' + '<b>' + this.weaponName + '</b>',
-                    heroLife: this.heroHealth,
-                    villainLife: this.villainHealth
-                });
+//
                 if(this.villainHealth < 0) {
+
                     this.villainHealth = 0;
+
+                    this.comment({
+                        view: '<i>'+this.heroName+'</i>' + '<font color="red"> hit</font> '+'<i>'+ this.villainName+'</i>' +' with ' + '<b>' + this.weaponName + '</b>',
+                        heroLife: this.heroHealth,
+                        villainLife: this.villainHealth
+                    });
+
                     this.comment({
                         view: '<i>'+this.villainName+'</i>' +'<font color="green"> shield </font>attack of '+'<i>'+ this.heroName+'</i>' + ' but got a knick'+ ' ' +this.villainHealth,
                         heroLife: this.heroHealth,
                         villainLife: this.villainHealth
                     });
                 } else {
+
+                    this.comment({
+                        view: '<i>'+this.heroName+'</i>' + '<font color="red"> hit</font> '+'<i>'+ this.villainName+'</i>' +' with ' + '<b>' + this.weaponName + '</b>',
+                        heroLife: this.heroHealth,
+                        villainLife: this.villainHealth
+                    });
+
                     this.comment({
                         view: '<i>'+this.villainName+'</i>' +'<font color="green"> shield</font> attack of '+'<i>'+ this.heroName+'</i>' + ' but got a knick'+ ' ' +this.villainHealth,
                         heroLife: this.heroHealth,
@@ -248,19 +286,30 @@ export default {
                 }
             } else {
                 this.heroHealth = this.heroHealth - (this.weaponDamage * 0.2);
-                this.comment({
-                    view: this.villainName+'<font color="red"> hit</font> '+this.heroName+ ' with ' + '<b>' + this.weaponName + '</b>',
-                    heroLife: this.heroHealth,
-                    villainLife: this.villainHealth
-                });
+
                 if(this.heroHealth < 0) {
+
                     this.heroHealth = 0;
+
+                    this.comment({
+                        view: this.villainName+'<font color="red"> hit</font> '+this.heroName+ ' with ' + '<b>' + this.weaponName + '</b>',
+                        heroLife: this.heroHealth,
+                        villainLife: this.villainHealth
+                    });
+
                     this.comment({
                         view: '<i>'+this.heroName+'</i>' +'<font color="green"> shield</font> attack of '+'<i>'+ this.villainName+'</i>' +' but got a knick'+ ' ' +this.heroHealth,
                         heroLife: this.heroHealth,
                         villainLife: this.villainHealth
                     });
                 } else {
+
+                    this.comment({
+                        view: this.villainName+'<font color="red"> hit</font> '+this.heroName+ ' with ' + '<b>' + this.weaponName + '</b>',
+                        heroLife: this.heroHealth,
+                        villainLife: this.villainHealth
+                    });
+
                     this.comment({
                         view: '<i>'+this.heroName+'</i>' +'<font color="green"> shield</font> attack of '+'<i>'+ this.villainName+'</i>' +' but got a knick'+ ' ' +this.heroHealth,
                         heroLife: this.heroHealth,
@@ -283,6 +332,7 @@ export default {
 
         showCommentary() {
             let that =  this;
+
             if(this.narration.length > 0 ) {
                 let comments = this.narration[0];
                 this.heroLife = comments.heroLife;
