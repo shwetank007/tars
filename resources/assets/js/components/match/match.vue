@@ -152,7 +152,7 @@ export default {
 			powers: [],
 			state: {
 				disabled: {
-					to: new Date()
+					to: moment().subtract(1, "days").toDate()
 				}
 			}
         }
