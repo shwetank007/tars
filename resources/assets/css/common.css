@@ -92,3 +92,15 @@ div.vertical-line{ /*Vertical Line to show Partition*/
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+.border-fix {
+    padding: 17px 0px;
+}
+
+.action-border {
+    padding: 10px 0px;
+}
+
+.edit-button {
+    margin-right: 8px;
+}

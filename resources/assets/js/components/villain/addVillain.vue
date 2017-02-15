@@ -94,15 +94,15 @@
                 </div>
             </div>
             <div class="row" v-for="(power,index) in powers">
-                <div class="col-sm-2 col-sm-offset-3 power-border">
+                <div class="col-sm-2 col-sm-offset-3 power-border border-fix">
                     {{power.name}}
                 </div>
-                <div class="col-sm-2 power-border">
+                <div class="col-sm-2 power-border border-fix">
                     {{power.damage}}
                 </div>
-                <div class="col-sm-2 power-border">
-                    <button @click="editPower(index)">Edit</button>
-                    <button @click="deletePower(index)">Delete</button>
+                <div class="col-sm-2 power-border action-border">
+                    <button @click="editPower(index)" class="btn btn-primary edit-button">Edit</button>
+                    <button @click="deletePower(index)" class="btn btn-danger">Delete</button>
                 </div>
             </div>
             <div class="row submit-button">
