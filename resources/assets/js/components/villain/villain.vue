@@ -63,10 +63,9 @@ export default {
 	methods: {
 
 		fetch () {
-			let that = this;
 			this.$http.get('api/villain')
 			.then((response) => {
-				that.antiHero = JSON.parse(response.body);
+				this.antiHero = JSON.parse(response.body);
 			})
 			.catch((error) => {
 				console.debug(error);

@@ -169,11 +169,11 @@ export default {
         fetch () {
 			this.$http.get('api/match')
 			.then((response) => {
-			    let all = JSON.parse(response.body);
-                this.matches = all.fixture;
-                this.superheroes = all.heroes;
-                this.villains = all.antiHeroes;
-				this.powers	= all.power;
+			    let data = JSON.parse(response.body);
+                this.matches = data.fixture;
+                this.superheroes = data.heroes;
+                this.villains = data.antiHeroes;
+				this.powers	= data.power;
 			})
 			.catch((error) => {
 				console.debug(error);

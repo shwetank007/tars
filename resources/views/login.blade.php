@@ -66,12 +66,11 @@
 					</br>
 					<div class="wrapper">
 						<span class="group-btn">
-							<button type="button" class="btn btn-primary btn-md" onclick="login()">login <i class="fa fa-sign-in"></i></button>
+							<button type="submit" class="btn btn-primary btn-md" onclick="login()">Login <i class="fa fa-sign-in"></i></button>
 						</span>
 					</div>
 				</form>
 			</div>
-
 		</div>
 	</div>
 	</div>

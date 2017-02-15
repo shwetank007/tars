@@ -68,10 +68,9 @@ export default {
 	methods: {
 
 		fetch () {
-			let that = this;
 			this.$http.get('api/hero')
 			.then((response)=> {
-				that.heroes = JSON.parse(response.body);
+				this.heroes = JSON.parse(response.body);
 			})
 			.catch((error) => {
 				console.debug(error);

@@ -75,10 +75,10 @@ export default {
             let id = this.$route.params.id;
             this.$http.get('api/match/' + id)
             .then((response) => {
-                var all = JSON.parse(response.body);
-                this.match = all.fixture;
-                this.powerHero = all.powerHero;
-                this.powerVillain = all.powerVillain;
+                let data = JSON.parse(response.body);
+                this.match = data.fixture;
+                this.powerHero = data.powerHero;
+                this.powerVillain = data.powerVillain;
                 let hero = this.match.hero.actor;
                 let villain = this.match.villain.actor;
                 this.start(hero, villain);
