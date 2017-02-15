@@ -101,7 +101,7 @@
                     {{power.damage}}
                 </div>
                 <div class="col-sm-2 power-border">
-                    <button>Edit</button>
+                    <button @click="editPower(index)">Edit</button>
                     <button @click="deletePower(index)">Delete</button>
                 </div>
             </div>
@@ -117,7 +117,7 @@
 export default {
 
     data () {
-        return{
+        return {
             avatar:'',
             actor: '',
             name: '',
@@ -191,6 +191,13 @@ export default {
             if(this.powers.length == 0) {
                 this.seen = false;
             }
+        },
+
+        editPower (id) {
+            this.showAddPower = true;
+            this.powerDamage = this.powers[id].damage;
+            this.powerName = this.powers[id].name;
+            this.powers.splice(id,1);
         }
     },
     computed:{
