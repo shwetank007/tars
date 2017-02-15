@@ -185,8 +185,8 @@ export default {
             this.seen = true;
         },
 
-        deletePower (item) {
-            this.powers.splice(item,1);
+        deletePower (id) {
+            this.powers.splice(id,1);
 
             if(this.powers.length == 0) {
                 this.seen = false;
