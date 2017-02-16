@@ -24,7 +24,8 @@
 						<div>
 							<b>Name        :</b> {{ villain.name }}.<br>
 							<b>Partner     :</b> {{ villain.partner }}.<br>
-							<b>Rival       :</b> {{ villain.rival }}.
+							<b>Rival       :</b> {{ villain.rival }}.<br>
+							<b>Power       :</b> <span v-for="powers in villain.power">{{powers.power_name}}<br></span>
 						</div>
 					</div>
 				</div>

@@ -9,4 +9,8 @@ class Villain extends Model
     protected $fillable = [
     	'avatar', 'actor', 'name', 'rival', 'partner',
     ];
+
+    public function power() {
+        return $this->hasMany(Power::class,'villain_id');
+    }
 }

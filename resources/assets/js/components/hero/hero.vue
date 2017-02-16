@@ -33,7 +33,8 @@
 						<div>
 							<b>Name        :</b> {{ hero.name }}.<br>
 							<b>Partner     :</b> {{ hero.partner }}.<br>
-							<b>Rival       :</b> {{ hero.rival }}.
+							<b>Rival       :</b> {{ hero.rival }}.<br>
+						    <b>Power 	   :</b> <span v-for="powers in hero.power">{{powers.power_name}}<br></span>
 						</div>
 					</div>
 				</div>
@@ -55,7 +56,6 @@ export default {
 			heroes:[],
 			powerName: '',
 			powerDamage: '',
-			weapons:[],
 			counter: 0,
 		}
 	},

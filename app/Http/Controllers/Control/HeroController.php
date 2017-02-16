@@ -14,8 +14,7 @@ class HeroController extends Controller
 {
     public function index()
     {
-        $hero = DB::table('heroes')
-            ->get();
+        $hero = Hero::with('power')->get();
         
         return response()->json($hero);
     }

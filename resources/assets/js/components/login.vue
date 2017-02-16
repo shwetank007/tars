@@ -2,6 +2,8 @@
 	.box {
 		background-color: white;
 		padding: 30px;
+		font-family: Verdana sans-serif;
+		font-size: large;
 	}
 	.box-count {
 		margin: 100px 50px;

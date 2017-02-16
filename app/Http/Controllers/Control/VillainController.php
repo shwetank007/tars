@@ -14,8 +14,7 @@ class VillainController extends Controller
 {
     public function index()
     {
-        $villain = DB::table('villains')
-            ->get();
+        $villain = Villain::with('power')->get();
         
         return response()->json($villain);   
     }

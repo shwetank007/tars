@@ -72,12 +72,9 @@ div.vertical-line{ /*Vertical Line to show Partition*/
     padding: 30px;
 }
 
-.power-table {
-    text-align: center;
-    margin-top: 40px;
-    margin-right: 58px;
-    margin-bottom: 40px;
-    background: white;
+.header-fix {
+    margin-top: -29px;
+    margin-bottom: 29px;
 }
 
 .power-border {
