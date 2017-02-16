@@ -185,25 +185,29 @@ export default {
 				villain_id: this.antiHero.id,
 				cause: this.cause,
 				place: this.place,
-                date: moment(this.date).format('DD/MM/YYYY'),
+                date: moment(this.date).format('DD-MM-YYYY'),
 				detail: '0'
 			};
-			let fight = {
-				hero: {
-					actor: this.hero.name,
-					avatar: this.hero.avatar
-				},
-				villain: {
-					actor: this.antiHero.name,
-					avatar: this.antiHero.avatar
-				},
-				cause: this.cause,
-				place: this.place,
-				date: moment(this.date).format('DD/MM/YYYY'),
-				detail: false
-			};
+
 			this.$http.post('api/match', match)
 			.then((response) => {
+				let data = JSON.parse(response.body);
+				let information = data.match;
+				let fight = {
+					id: information.id,
+					hero:{
+						actor: information.hero.actor,
+						avatar: information.hero.avatar
+					},
+					villain:{
+						actor: information.villain.name,
+						avatar: information.villain.avatar
+					},
+					cause: information.cause,
+					place: information.place,
+					date: moment(information.date).format('DD-MM-YYYY'),
+					detail: information.detail
+				};
 				this.matches.push(fight);
 			})
 			.catch((error) => {

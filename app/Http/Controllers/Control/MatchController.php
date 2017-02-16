@@ -43,10 +43,11 @@ class MatchController extends Controller
             $match->detail      = $request->get('detail');
             $match->date        = $request->get('date');
             $match->save();
-
         DB::commit();
 
-        return response()->json(['status'=>'success'],200);
+        $data = Match::with('hero','villain')->find($match->id);
+
+        return response()->json(['status'=>'success','match'=>$data],200);
     }
 
    public function destroy($id)
