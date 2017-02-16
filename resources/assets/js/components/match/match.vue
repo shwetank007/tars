@@ -111,7 +111,6 @@
 					<button @click="match.detail = !match.detail">{{(match.detail)?'Hide Detail':'Detail' }}</button>
 					<button @click="removeMatch(index,match.id)">Delete</button>
 					<router-link :to="{ name: 'fight', params: { id: match.id }}"><button>Start Match</button></router-link>
-					<!--<button v-on:click="start(match.hero.actor, match.villain.actor)">Start Match</button>-->
 				</div>
 				<div v-show="match.detail" class="detail">
 					<b>Cause       :</b> {{ match.cause }}.<br>

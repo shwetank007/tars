@@ -254,7 +254,7 @@ export default {
         shield () {
             if(this.defence==0) {
                 this.villainHealth = this.villainHealth - (this.weaponDamage * 0.2);
-//
+
                 if(this.villainHealth < 0) {
 
                     this.villainHealth = 0;

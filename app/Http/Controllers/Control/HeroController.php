@@ -50,7 +50,6 @@ class HeroController extends Controller
                 $power->save();
             }
         DB::commit();
-//        ,'avatar' => $hero->avatar]
         return response()->json(['status'=>'success'], 200);
     }
 
