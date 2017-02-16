@@ -68,7 +68,7 @@
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group" :class="{'has-error': errors.has('powerDamage')}">
-                                <input v-model="powerDamage" v-validate data-vv-rules="required" data-vv-name="powerDamage" type="text"
+                                <input v-model="powerDamage" v-validate data-vv-rules="required|between:1,100" data-vv-name="powerDamage" type="text"
                                        class="form-control input-sm" placeholder="Power Damage">
                                 <span v-show="errors.has('powerDamage')" class="help-block">{{ errors.first('powerDamage') }}</span>
                             </div>
@@ -104,7 +104,7 @@
                             </div>
                             <div class="row submit-button center">
                                 <div class="col-sm-4 col-sm-offset-4 center">
-                                    <button @click.prevent="addHero(index)" v-bind:disabled="!isValid" type="submit" class="btn btn-primary">Submit</button>
+                                    <button @click.prevent="addVillain(index)" v-bind:disabled="!isValid" type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
                         </div>
@@ -209,7 +209,7 @@
             },
 
             checkPower () {
-                return this.powerName != '' && this.powerDamage != ''
+                return this.powerName != '' && this.powerDamage != '' && !isNaN(this.powerDamage) && 0 < this.powerDamage && this.powerDamage < 101 && this.powerDamage % 1 == 0
             }
         }
     }

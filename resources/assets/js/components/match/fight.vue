@@ -20,9 +20,9 @@
             <div class="col-md-2 font-line">
                 <div class="left-align">
                     <img :src="'images/'+match.hero.avatar" height="120px" width="120px" style="border-radius: 50%;"><br>
-                    {{match.hero.actor}}
-                </div>
-                <span>{{match.hero.actor}} Life: {{heroLife}}</span>
+                    <span>{{match.hero.actor}}</span>
+                </div><br>
+                <span>Health: {{heroLife}}</span>
             </div>
             <div class="col-md-8 comment">
                 <ol style="list-style-type: none">
@@ -33,11 +33,12 @@
             <div class="col-md-2 font-line">
                 <div class="right-align">
                     <img :src="'images/'+match.villain.avatar" height="120px" width="120px" style="border-radius: 50%;"><br>
-                    {{match.villain.actor}}
-                </div>
-                <span>{{match.villain.actor}} Life: {{villainLife}}</span>
+                    <span>{{match.villain.actor}}</span><br>
+                </div><br>
+                <span>Health: {{villainLife}}</span>
             </div>
         </div>
+    </div>
 </template>
 <script>
 export default {
@@ -254,7 +255,7 @@ export default {
         shield () {
             if(this.defence==0) {
                 this.villainHealth = this.villainHealth - (this.weaponDamage * 0.2);
-
+                this.villainHealth = Math.ceil(this.villainHealth);
                 if(this.villainHealth < 0) {
 
                     this.villainHealth = 0;
@@ -286,7 +287,7 @@ export default {
                 }
             } else {
                 this.heroHealth = this.heroHealth - (this.weaponDamage * 0.2);
-
+                this.heroHealth = Math.ceil(this.heroHealth);
                 if(this.heroHealth < 0) {
 
                     this.heroHealth = 0;
