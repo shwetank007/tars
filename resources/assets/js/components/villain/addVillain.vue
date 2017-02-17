@@ -57,6 +57,11 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-sm-4 col-sm-offset-4 note-text">
+                                Note :- To submit the form fill power in power tab.
+                            </div>
+                        </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="power">
                         <div class="col-sm-3 col-sm-offset-3">

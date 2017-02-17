@@ -14,7 +14,7 @@
 		</div>
 		<div class="container">
 			<div class="col-md-12 hv-look" v-for="(hero,index) in heroes">
-				<div class="col-md-4 center">
+				<div class="col-md-3 center">
 					<div v-bind:class="[hero.detail ? 'distance' : '']">
 						<img :src="'images/'+hero.avatar" height="50px" width="50px" style="border-radius: 50%;">
 						<span class="hv-style">{{ hero.actor }}</span>
@@ -38,9 +38,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-2 center hv-down">
+				<div class="col-md-3 center hv-down">
 					<div v-bind:class="[hero.detail ? 'distance' : '']">
 						<button @click="hero.detail = !hero.detail" style="position: inherit;">{{(hero.detail)?'Hide Detail':'Detail' }}</button>
+						<!--<button @click="editHero">Edit</button>-->
 						<button @click="removeHero(index,hero.id)">Delete</button>
 					</div>
 				</div>

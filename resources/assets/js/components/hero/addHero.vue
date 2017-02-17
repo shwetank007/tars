@@ -1,9 +1,16 @@
+<style>
+.note-text {
+    font-family: serif;
+    opacity: 0.6;
+    padding-left: 50px;
+}
+</style>
 <template>
     <div class="page-wrap">
         <div class="container background">
             <ul class="nav nav-tabs header-fix" role="tablist">
-                <li role="presentation" class="active"><a href="#bio" aria-controls="home" role="tab" data-toggle="tab">Bio</a></li>
-                <li role="presentation"><a href="#power" aria-controls="profile" role="tab" data-toggle="tab">Power</a></li>
+                <li role="presentation" class="active"><a href="#bio" aria-controls="bio" role="tab" data-toggle="tab">Bio</a></li>
+                <li role="presentation"><a href="#power" aria-controls="power" role="tab" data-toggle="tab">Power</a></li>
             </ul>
             <form>
             <!--Start Tab panes -->
@@ -55,6 +62,11 @@
                                        class="form-control input-sm" placeholder="Arch Rival Name">
                                 <span v-show="errors.has('rival')" class="help-block">{{ errors.first('rival') }}</span>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-offset-4 note-text">
+                            Note :- To submit the form fill power in power tab.
                         </div>
                     </div>
                 </div>
