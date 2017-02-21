@@ -1,10 +1,3 @@
-<style>
-.note-text {
-    font-family: serif;
-    opacity: 0.6;
-    padding-left: 50px;
-}
-</style>
 <template>
     <div class="page-wrap">
         <div class="container background">

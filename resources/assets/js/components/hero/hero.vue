@@ -41,7 +41,7 @@
 				<div class="col-md-3 center hv-down">
 					<div v-bind:class="[hero.detail ? 'distance' : '']">
 						<button @click="hero.detail = !hero.detail" style="position: inherit;">{{(hero.detail)?'Hide Detail':'Detail' }}</button>
-						<!--<button @click="editHero">Edit</button>-->
+						<router-link :to="{ name: 'editHero', params: { id: hero.id } }"><button>Edit</button></router-link>
 						<button @click="removeHero(index,hero.id)">Delete</button>
 					</div>
 				</div>

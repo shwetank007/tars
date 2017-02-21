@@ -19,17 +19,26 @@ class HeroController extends Controller
         return response()->json($hero);
     }
 
+    public function show($id)
+    {
+        $hero = Hero::with('power')->find($id);
+
+        return response()->json(['hero'=>$hero]);
+    }
+
     public function store(Request $request)
     {
         $data = json_decode($request->hero);
 
         DB::beginTransaction();
+
             $hero = new Hero();
             $hero->actor    = $data->actor;
             $hero->name     = $data->name;
             $hero->partner  = $data->partner;
             $hero->rival    = $data->rival;
             $hero->detail   = $data->detail;
+
             if ($request->hasFile('avatar')) {
                 $file = Input::file('avatar');
                 $timestamp = str_replace([' ', ':'], '-', Carbon::now()->toDateTimeString());
@@ -48,8 +57,15 @@ class HeroController extends Controller
                 $power->damage      = $data->power[$i]->damage;
                 $power->save();
             }
+
         DB::commit();
+
         return response()->json(['status'=>'success'], 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        dd($request->all());
     }
 
     public function destroy($id)

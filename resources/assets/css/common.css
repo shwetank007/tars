@@ -101,3 +101,9 @@ div.vertical-line{ /*Vertical Line to show Partition*/
 .edit-button {
     margin-right: 8px;
 }
+
+.note-text {
+    font-family: serif;
+    opacity: 0.6;
+    padding-left: 50px;
+}
