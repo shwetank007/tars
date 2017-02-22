@@ -168,7 +168,6 @@ export default {
                 })
                 .catch((error) => {
                     console.debug(error);
-                    this.errorMessage = true;
                 });
         },
 

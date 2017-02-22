@@ -80,10 +80,10 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-4 col-sm-offset-4 center">
-                                <!--<button @click="submitPower" v-bind:disabled="!checkPower" class="btn btn-primary">Submit Power</button>-->
+                                <button @click.prevent="submitPower" v-bind:disabled="!checkPower" class="btn btn-primary">Submit Power</button>
                             </div>
                         </div>
-                        <div><!--v-if="seen"-->
+                        <div>
                             <div class="row table-start center">
                                 <div class="col-sm-2 col-sm-offset-3 power-border">
                                     Power Name
@@ -103,13 +103,13 @@
                                     {{power.damage}}
                                 </div>
                                 <div class="col-sm-2 power-border action-border">
-                                    <!--@click="editPower(index)"--><button class="btn btn-primary edit-button">Edit</button>
-                                    <!-- @click="deletePower(index)"--><button class="btn btn-danger">Delete</button>
+                                    <button @click="editPower(index)" class="btn btn-primary edit-button">Edit</button>
+                                    <button @click="deletePower(index)" class="btn btn-danger">Delete</button>
                                 </div>
                             </div>
                             <div class="row submit-button center">
-                                <div class="col-sm-4 col-sm-offset-4 center"><!--v-bind:disabled="!isValid"-->
-                                    <button @click.prevent="editHero()" type="submit" class="btn btn-primary">Submit</button>
+                                <div class="col-sm-4 col-sm-offset-4 center">
+                                    <button @click.prevent="editHero()" v-bind:disabled="!isValid" type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
                         </div>
@@ -151,18 +151,18 @@
             fetch () {
                 let id  = this.$route.params.id;
                 this.$http.get('api/hero/' + id)
-                        .then((response)=> {
-                            let data = JSON.parse(response.body);
-                            this.avatar     = data.hero.avatar;
-                            this.actor      = data.hero.actor;
-                            this.name       = data.hero.name;
-                            this.partner    = data.hero.partner;
-                            this.rival      = data.hero.rival;
-                            this.powers     = data.hero.power;
-                        })
-                        .catch((error)=>{
-                            console.debug(error);
-                        });
+                .then((response)=> {
+                    let data = JSON.parse(response.body);
+                    this.avatar     = data.hero.avatar;
+                    this.actor      = data.hero.actor;
+                    this.name       = data.hero.name;
+                    this.partner    = data.hero.partner;
+                    this.rival      = data.hero.rival;
+                    this.powers     = data.hero.power;
+                })
+                .catch((error)=>{
+                    console.debug(error);
+                });
             },
 
             editHero () {
@@ -176,20 +176,73 @@
                     name: this.name,
                     rival: this.rival,
                     partner: this.partner,
-                    power: this.powers,
                     detail: 0,
                 };
 
-                //form.append('hero', JSON.stringify(hero));
+                form.append('hero', JSON.stringify(hero));
 
                 this.$http.post('api/hero/' + id, form)
                 .then((response)=> {
-                    console.log(response);
+                    this.actor = this.name = this.partner = this.rival = this.avatar = '';
+                    this.powers=[];
+                    this.$router.push('/hero');
                 })
                 .catch((error)=>{
-
+                    console.debug(error);
                 });
             },
+
+            clearPowerForm () {
+                this.powerName = '';
+                this.powerDamage = 0;
+            },
+
+            submitPower () {
+                let id  = this.$route.params.id;
+                let power = {
+                    hero_id: id,
+                    power_name: this.powerName,
+                    damage: this.powerDamage
+                };
+                this.$http.post('api/power', power)
+                .then((response)=>{
+                    let data = JSON.parse(response.body);
+                    console.log(data);
+//                    this.powers.push(power);
+//                    this.clearPowerForm();
+                })
+                .catch((error)=>{
+                    console.debug(error);
+                });
+            },
+
+            deletePower (id) {
+
+                this.powers.splice(id,1);
+
+                if(this.powers.length == 0) {
+                    this.seen = false;
+                }
+            },
+
+            editPower (id) {
+                this.showAddPower = true;
+                this.powerDamage = this.powers[id].damage;
+                this.powerName = this.powers[id].name;
+                this.powers.splice(id,1);
+            }
+
+        },
+
+        computed: {
+
+            isValid () {
+                return this.actor != '' && this.name != '' && this.partner != '' && this.rival != ''
+            },
+
+            checkPower () {
+                return this.powerName != '' && this.powerDamage != '' && !isNaN(this.powerDamage) && 0 < this.powerDamage && this.powerDamage < 101 && this.powerDamage % 1 == 0
+            }
 
         }
     }

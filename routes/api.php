@@ -10,6 +10,7 @@ Route::group(["namespace" => 'Control', 'middleware' => 'api'], function() {
 	Route::resource('hero', 'HeroController');
 	Route::resource('villain', 'VillainController');
 	Route::resource('match', 'MatchController');
+    Route::resource('power', 'PowerController');
     Route::resource('dashboard', 'DashboardController');
 });
 

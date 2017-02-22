@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Control;
 
 use App\Hero;
 use App\Http\Controllers\Controller;
-use App\Power;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,23 +39,15 @@ class HeroController extends Controller
             $hero->detail   = $data->detail;
 
             if ($request->hasFile('avatar')) {
-                $file = Input::file('avatar');
-                $timestamp = str_replace([' ', ':'], '-', Carbon::now()->toDateTimeString());
-                $name = $timestamp . '-' . $file->getClientOriginalName();
-                $hero->avatar = $name;
+                $file           = Input::file('avatar');
+                $timestamp      = str_replace([' ', ':'], '-', Carbon::now()->toDateTimeString());
+                $name           = $timestamp . '-' . $file->getClientOriginalName();
+                $hero->avatar   = $name;
                 $file->move(public_path() . '/images/', $name);
             } else {
                 $hero->avatar = 'default.gif';
             }
             $hero->save();
-
-            for($i = 0; $i < count($data->power); $i++) {
-                $power = new Power();
-                $power->hero_id     = $hero->id;
-                $power->power_name  = $data->power[$i]->name;
-                $power->damage      = $data->power[$i]->damage;
-                $power->save();
-            }
 
         DB::commit();
 
@@ -65,7 +56,30 @@ class HeroController extends Controller
 
     public function update(Request $request, $id)
     {
-        dd($request->all());
+        $data = json_decode($request->hero);
+
+        DB::beginTransaction();
+
+            $hero = Hero::find($id);
+            $hero->actor    = $data->actor;
+            $hero->name     = $data->name;
+            $hero->rival    = $data->rival;
+            $hero->partner  = $data->partner;
+            $hero->detail   = $data->detail;
+
+            if ($request->hasFile('avatar')) {
+                $file           = Input::file('avatar');
+                $timestamp      = str_replace([' ', ':'], '-', Carbon::now()->toDateTimeString());
+                $name           = $timestamp . '-' . $file->getClientOriginalName();
+                $hero->avatar   = $name;
+                $file->move(public_path() . '/images/', $name);
+            }
+
+            $hero->save();
+
+        DB::commit();
+
+        return response()->json(['status'=>'success'], 200);
     }
 
     public function destroy($id)
