@@ -103,8 +103,8 @@
                                     {{power.damage}}
                                 </div>
                                 <div class="col-sm-2 power-border action-border">
-                                    <button @click="editPower(index)" class="btn btn-primary edit-button">Edit</button>
-                                    <button @click="deletePower(index)" class="btn btn-danger">Delete</button>
+                                    <button @click="editPower(index,power.id)" class="btn btn-primary edit-button">Edit</button>
+                                    <button @click.prevent="deletePower(index,power.id)" class="btn btn-danger">Delete</button>
                                 </div>
                             </div>
                             <div class="row submit-button center">
@@ -207,25 +207,38 @@
                 this.$http.post('api/power', power)
                 .then((response)=>{
                     let data = JSON.parse(response.body);
-                    console.log(data);
-//                    this.powers.push(power);
-//                    this.clearPowerForm();
+                    this.powers.push(data.power);
+                    this.clearPowerForm();
                 })
                 .catch((error)=>{
                     console.debug(error);
                 });
             },
 
-            deletePower (id) {
+            deletePower (item, id) {
 
-                this.powers.splice(id,1);
+                this.$http.delete('api/power/'+id)
+                .then((response)=>{
+                    this.powers.splice(item,1);
+                })
+                .catch((error)=>{
+                    console.debug(error);
+                });
+
 
                 if(this.powers.length == 0) {
                     this.seen = false;
                 }
             },
 
-            editPower (id) {
+            editPower (item, id) {
+
+//                this.$http.post('api/power'+id, )
+//                .then((response)=>{
+//
+//                }).catch((error)=>{
+//                    console.debug(error);
+//                });
                 this.showAddPower = true;
                 this.powerDamage = this.powers[id].damage;
                 this.powerName = this.powers[id].name;
