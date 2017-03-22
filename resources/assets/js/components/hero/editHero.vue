@@ -103,7 +103,7 @@
                                     {{power.damage}}
                                 </div>
                                 <div class="col-sm-2 power-border action-border">
-                                    <button @click="editPower(index,power.id)" class="btn btn-primary edit-button">Edit</button>
+                                    <button @click.prevent="editPower(index,power.id)" class="btn btn-primary edit-button">Edit</button>
                                     <button @click.prevent="deletePower(index,power.id)" class="btn btn-danger">Delete</button>
                                 </div>
                             </div>
@@ -233,16 +233,17 @@
 
             editPower (item, id) {
 
-//                this.$http.post('api/power'+id, )
+                this.powerDamage = this.powers[item].damage;
+                this.powerName = this.powers[item].power_name;
+//                this.$http.put('api/power'+id, )
 //                .then((response)=>{
 //
 //                }).catch((error)=>{
 //                    console.debug(error);
 //                });
-                this.showAddPower = true;
-                this.powerDamage = this.powers[id].damage;
-                this.powerName = this.powers[id].name;
-                this.powers.splice(id,1);
+//                this.powerDamage = this.powers[id].damage;
+//                this.powerName = this.powers[id].name;
+//                this.powers.splice(id,1);
             }
 
         },
